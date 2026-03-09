@@ -1,0 +1,79 @@
+{
+  "name": "@brownie-js/react",
+  "version": "1.0.0",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./controls": {
+      "import": {
+        "types": "./dist/controls/index.d.ts",
+        "default": "./dist/controls/index.js"
+      },
+      "require": {
+        "types": "./dist/controls/index.d.cts",
+        "default": "./dist/controls/index.cjs"
+      }
+    },
+    "./theme": {
+      "import": {
+        "types": "./dist/theme/index.d.ts",
+        "default": "./dist/theme/index.js"
+      },
+      "require": {
+        "types": "./dist/theme/index.d.cts",
+        "default": "./dist/theme/index.cjs"
+      }
+    },
+    "./cluster": {
+      "import": { "types": "./dist/cluster/index.d.ts", "default": "./dist/cluster/index.js" },
+      "require": { "types": "./dist/cluster/index.d.cts", "default": "./dist/cluster/index.cjs" }
+    },
+    "./route": {
+      "import": { "types": "./dist/route/index.d.ts", "default": "./dist/route/index.js" },
+      "require": { "types": "./dist/route/index.d.cts", "default": "./dist/route/index.cjs" }
+    },
+    "./geo": {
+      "import": { "types": "./dist/geo/index.d.ts", "default": "./dist/geo/index.js" },
+      "require": { "types": "./dist/geo/index.d.cts", "default": "./dist/geo/index.cjs" }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "prepublishOnly": "turbo build"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^18.0.0",
+    "happy-dom": "^20.8.3",
+    "react": "^18.0.0",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@brownie-js/core": "workspace:*"
+  }
+}
