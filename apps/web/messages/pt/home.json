@@ -1,0 +1,65 @@
+{
+  "hero": {
+    "tagline": "A biblioteca de mapas React com 9 kB.",
+    "subtitle": "Zero dependências. Sem Leaflet, sem Mapbox — só tiles, vetores e controle total.",
+    "cta": "Ver a Documentação",
+    "installCommand": "npm install @brownie-js/react"
+  },
+  "features": {
+    "title": "Por que BrownieJS?",
+    "zeroDep": {
+      "title": "Zero Dependências",
+      "description": "Sem Leaflet, sem Mapbox. TypeScript puro — você controla cada pixel."
+    },
+    "bundleSize": {
+      "title": "Bundle Minúsculo",
+      "description": "~9kB gzipped. Mapas interativos sem inflar sua aplicação."
+    },
+    "tested": {
+      "title": "Amplamente Testado",
+      "description": "Suite de testes abrangente cobrindo cada componente e hook."
+    },
+    "accessible": {
+      "title": "Acessível",
+      "description": "Navegação por teclado, labels ARIA, indicadores de foco. Conforme WCAG 2.1 AA."
+    }
+  },
+  "demos": {
+    "title": "Veja em ação",
+    "tilesMap": {
+      "title": "Mapa Interativo com Tiles",
+      "description": "Tiles OpenStreetMap com marcadores, clusters, popups e círculos geográficos. Arraste e amplie para explorar."
+    },
+    "geolocation": {
+      "title": "Geolocalização",
+      "description": "Detecte a posição do usuário com um marcador pulsante. Inicia simulado — clique no botão para usar sua localização real.",
+      "ctaButton": "Testar com a minha localização"
+    },
+    "theme": {
+      "title": "Temas",
+      "description": "Personalize todos os componentes com MapThemeProvider. Passe um objeto de tema e todos os marcadores, popups, controles e indicadores de foco se atualizam instantaneamente."
+    },
+    "routes": {
+      "title": "Rotas",
+      "description": "Roteamento rodoviário entre pontos usando OSRM. Explore diferentes modos de roteamento.",
+      "tabs": {
+        "fixed": "Rota Fixa",
+        "interactive": "Interativo",
+        "multipoint": "Múltiplos Pontos",
+        "toHere": "Rota até Aqui"
+      },
+      "distance": "Distância",
+      "duration": "Duração",
+      "clickMarker": "Clique em um marcador para calcular a rota"
+    }
+  },
+  "story": {
+    "title": "Por que \"Brownie\"?",
+    "text": "Brownie era um Shih Tzu que chegou ao mundo nas nossas mãos e partiu da mesma forma — cedo demais, com apenas um ano e meio. Ele tinha um coração maior do que seu pequeno corpo podia conter. Esta biblioteca leva o nome dele porque todo projeto deveria ser construído com a mesma alegria que ele trazia a tudo que explorava. Mapas nos ajudam a encontrar caminhos. O Brownie nos ajudou a encontrar o nosso."
+  },
+  "cta": {
+    "title": "Mapas em 5 linhas de código.",
+    "description": "Instale, componha, publique. BrownieJS funciona com qualquer setup React.",
+    "button": "Ver a Documentação"
+  }
+}

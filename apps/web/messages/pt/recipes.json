@@ -1,0 +1,17 @@
+{
+  "title": "Receitas",
+  "heroBadge": "Copie & Cole",
+  "subtitle": "Exemplos prontos para usar. Copie, cole e personalize.",
+  "storeLocator": {
+    "title": "Localizador de Lojas",
+    "description": "Exiba localizações de lojas em um mapa com marcadores clicáveis e popups informativos. Ideal para sites de varejo, buscadores de restaurantes ou qualquer diretório de locais."
+  },
+  "deliveryTracker": {
+    "title": "Rastreador de Entregas",
+    "description": "Rota animada com efeito de trilha, popup do restaurante com imagem e marcador de destino da entrega."
+  },
+  "realEstate": {
+    "title": "Mapa Imobiliário",
+    "description": "Listagens de imóveis com agrupamento por cores de categoria, popups com imagem e marcadores animados."
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "title": "Documentação da API",
+  "heroBadge": "Componentes & Hooks",
+  "subtitle": "Um modelo de componentes composíveis — GeoMap fornece o container, e todo o resto é composto como filhos.",
+  "gettingStarted": {
+    "title": "Primeiros Passos",
+    "installTitle": "Instalação",
+    "exampleTitle": "Exemplo Mínimo",
+    "description": "BrownieJS utiliza um modelo de componentes composíveis. GeoMap fornece o container do mapa com renderização de tiles. TileLayer, Marker, MarkerCluster, Popup, Circle, Route e Geolocation são compostos como filhos.",
+    "exampleNote": "GeoMap fornece o container do mapa e contexto. TileLayer renderiza tiles OSM. Marker, Route e Geolocation são compostos como filhos."
+  },
+  "sidebar": {
+    "gettingStarted": "Primeiros Passos",
+    "components": "Componentes",
+    "hooks": "Hooks",
+    "headlessHooks": "Hooks Headless",
+    "customization": "Personalização",
+    "controls": "Controles",
+    "mobileNav": "Navegação da documentação",
+    "desktopNav": "Navegação da documentação"
+  },
+  "propTable": {
+    "prop": "Prop",
+    "type": "Tipo",
+    "default": "Padrão",
+    "description": "Descrição"
+  },
+  "components": {
+    "geomap": {
+      "title": "GeoMap",
+      "description": "O componente raiz do mapa. Fornece um mapa baseado em tiles com centro e zoom configuráveis, dimensionamento automático via ResizeObserver, navegação com zoom e pan, e contexto para todos os componentes filhos. Expõe um handle imperativo via ref com flyTo(FlyToOptions) para transições animadas, fitBounds e consultas de viewport.",
+      "props": {
+        "center": "Centro do mapa como [longitude, latitude].",
+        "zoom": "Nível de zoom inicial.",
+        "style": "Estilos CSS para o container do mapa.",
+        "className": "Nome de classe CSS para o container do mapa.",
+        "bounds": "Bounds iniciais para ajustar o mapa.",
+        "width": "Largura fixa em pixels (auto-dimensiona se omitido).",
+        "height": "Altura fixa em pixels (auto-dimensiona se omitido).",
+        "children": "Componentes filhos (TileLayer, Marker, Route, etc.).",
+        "mapLabel": "Label acessível para o container do mapa.",
+        "minZoom": "Nível mínimo de zoom.",
+        "maxZoom": "Nível máximo de zoom.",
+        "onZoomChange": "Dispara durante o zoom com o nível atual.",
+        "onMoveEnd": "Dispara quando uma interação de zoom ou pan termina.",
+        "onClick": "Chamado quando o mapa é clicado.",
+        "showAttribution": "Exibe a atribuição do provedor de tiles. Padrão: true.",
+        "isLoading": "Quando true, exibe o placeholder de carregamento no lugar do mapa. Use enquanto dados assíncronos (marcadores, rotas, etc.) estão sendo buscados.",
+        "loader": "Componente de carregamento customizado exibido quando isLoading é true. Padrão: componente <Loader /> embutido.",
+        "interactiveZoom": "Habilita o zoom via scroll, gesto de pinça e duplo clique. Defina como false para bloquear o nível de zoom mantendo o pan. Padrão: true.",
+        "onError": "Chamado quando um erro é lançado dentro do mapa. Recebe (error: Error, info: React.ErrorInfo). Use para conectar serviços de monitoramento de erros como Sentry ou Datadog."
+      }
+    },
+    "marker": {
+      "title": "Marker",
+      "description": "Renderiza um marcador em uma coordenada geográfica. Suporta conteúdo SVG personalizado, arrastar e soltar, handlers de clique e tooltips.",
+      "props": {
+        "coordinates": "Coordenadas geográficas [longitude, latitude] (convenção GeoJSON).",
+        "color": "Cor de preenchimento do marcador.",
+        "size": "Diâmetro do marcador em pixels.",
+        "draggable": "Se o marcador pode ser arrastado.",
+        "children": "Conteúdo SVG personalizado. Substitui o círculo padrão quando fornecido.",
+        "icon": "ReactNode personalizado para substituir o ícone padrão do marcador.",
+        "anchor": "Ponto de ancoragem do marcador.",
+        "opacity": "Opacidade do marcador (0–1).",
+        "onClick": "Chamado quando o marcador é clicado.",
+        "onMouseEnter": "Chamado quando o mouse entra no marcador.",
+        "onMouseLeave": "Chamado quando o mouse sai do marcador.",
+        "onDragEnd": "Chamado quando o arraste completa com novas coordenadas geográficas.",
+        "data": "Dados arbitrários para associar ao marcador.",
+        "animated": "Ativar animação de entrada (fade-in + deslize) quando o marcador é montado.",
+        "ariaLabel": "Nome acessível para o marcador."
+      }
+    },
+    "route": {
+      "title": "Route",
+      "description": "Desenha um path SVG ao longo de uma série de coordenadas geográficas. Suporta estilização de traços personalizada, linhas tracejadas, integração com roteamento OSRM e tooltips.",
+      "props": {
+        "coordinates": "Array de coordenadas geográficas [longitude, latitude] definindo a rota.",
+        "color": "Cor do traço.",
+        "strokeWidth": "Largura do traço em pixels.",
+        "dashArray": "SVG stroke-dasharray para linhas tracejadas (ex: \"5,5\").",
+        "routing": "Ativar roteamento OSRM.",
+        "routingUrl": "URL personalizada do endpoint OSRM.",
+        "onClick": "Chamado quando o path da rota é clicado.",
+        "onMouseEnter": "Chamado quando o mouse entra no path da rota.",
+        "onMouseLeave": "Chamado quando o mouse sai do path da rota.",
+        "onRouteLoaded": "Chamado quando os dados da rota OSRM carregam.",
+        "animated": "Ativar animação de trilha de formigas ao longo do path da rota.",
+        "animationSpeed": "Duração de um ciclo de animação em segundos.",
+        "ariaLabel": "Nome acessível para a rota."
+      }
+    },
+    "geolocation": {
+      "title": "Geolocation",
+      "description": "Acessa a API de Geolocalização do navegador para rastrear a posição do usuário. Pode monitorar continuamente mudanças de posição com precisão e timeout configuráveis.",
+      "props": {
+        "watch": "Se deve monitorar continuamente a posição.",
+        "enableHighAccuracy": "Ativar modo de alta precisão.",
+        "timeout": "Timeout em milissegundos.",
+        "maximumAge": "Idade máxima da posição em cache em milissegundos.",
+        "onError": "Chamado quando ocorre um erro de geolocalização."
+      }
+    },
+    "tilelayer": {
+      "title": "TileLayer",
+      "description": "Renderiza uma grade de tiles a partir de um template de URL (ex: OpenStreetMap). Deve ser colocado dentro de GeoMap.",
+      "props": {
+        "url": "Template de URL do tile com placeholders '{'x'}', '{'y'}', '{'z'}'.",
+        "opacity": "Opacidade da camada (0–1).",
+        "zIndex": "CSS z-index para ordenação de camadas."
+      }
+    },
+    "markercluster": {
+      "title": "MarkerCluster",
+      "description": "Agrupa marcadores próximos em clusters usando um algoritmo baseado em grid. Re-agrupa automaticamente ao mudar o zoom.",
+      "props": {
+        "radius": "Tamanho da célula do grid de cluster em pixels.",
+        "maxZoom": "Nível de zoom acima do qual marcadores não são agrupados.",
+        "renderCluster": "Função de renderização personalizada para marcadores de cluster.",
+        "onClick": "Chamado quando um cluster é clicado.",
+        "animated": "Ativar animações de transição suaves quando clusters se fundem ou dividem.",
+        "categoryKey": "Chave de dados usada para agrupar marcadores em categorias dentro dos clusters.",
+        "categoryColors": "Mapa de valores de categoria para cores na renderização de clusters multicategoria.",
+        "children": "Componentes Marker para agrupar."
+      }
+    },
+    "popup": {
+      "title": "Popup",
+      "description": "Um overlay HTML posicionado em coordenadas geográficas. Pode ser usado sozinho ou como filho de Marker.",
+      "props": {
+        "coordinates": "Posição geográfica [longitude, latitude]. Herdada do Marker pai se omitida.",
+        "offset": "Deslocamento em pixels [x, y] da posição de ancoragem.",
+        "closeOnClick": "Se clicar no mapa fecha o popup.",
+        "onClose": "Chamado quando o popup é fechado.",
+        "className": "Classe CSS para o container do popup.",
+        "style": "Estilos inline para o container do popup.",
+        "image": "Imagem hero opcional exibida acima do conteúdo do popup.",
+        "children": "Conteúdo do popup."
+      }
+    },
+    "circle": {
+      "title": "Circle",
+      "description": "Renderiza um círculo SVG no mapa com um centro geográfico e raio em metros.",
+      "props": {
+        "center": "Coordenadas do centro [longitude, latitude].",
+        "radius": "Raio em metros.",
+        "color": "Cor do contorno.",
+        "fillColor": "Cor de preenchimento.",
+        "strokeWidth": "Largura do contorno em pixels.",
+        "dashArray": "SVG stroke-dasharray para bordas tracejadas.",
+        "opacity": "Opacidade geral (0–1).",
+        "onClick": "Chamado quando o círculo é clicado.",
+        "ariaLabel": "Nome acessível para o círculo."
+      }
+    },
+    "tooltip": {
+      "title": "Tooltip",
+      "description": "Um overlay leve que exibe conteúdo em uma posição em pixels. Tipicamente usado com eventos de mouse em marcadores ou rotas.",
+      "props": {
+        "x": "Posição horizontal em pixels.",
+        "y": "Posição vertical em pixels.",
+        "content": "Conteúdo do tooltip.",
+        "className": "Classe CSS para o container do tooltip.",
+        "style": "Estilos inline para o container do tooltip."
+      }
+    },
+    "mapcontrol": {
+      "title": "MapControl",
+      "description": "Posiciona controles filhos em um canto do mapa. Use com controles integrados (ZoomControl, ScaleBar) ou qualquer conteúdo personalizado.",
+      "props": {
+        "position": "Posição do canto: 'top-left', 'top-right', 'bottom-left' ou 'bottom-right'.",
+        "children": "Conteúdo do controle a ser renderizado no canto do mapa.",
+        "className": "Classe CSS para o container do controle.",
+        "style": "Estilos inline para o container do controle."
+      }
+    },
+    "svglayer": {
+      "title": "SVGLayer",
+      "description": "Uma camada de overlay SVG personalizada. Fornece uma render prop project() que converte coordenadas geográficas em posições de pixel, permitindo desenhar formas SVG arbitrárias no mapa.",
+      "props": {
+        "children": "Função de renderização recebendo '{ project }' para conversão de coordenadas para pixels.",
+        "className": "Classe CSS para o container SVG.",
+        "style": "Estilos inline para o container SVG."
+      }
+    },
+    "htmllayer": {
+      "title": "HTMLLayer",
+      "description": "Uma camada de overlay HTML personalizada. Fornece uma render prop project() que converte coordenadas geográficas em posições de pixel, permitindo renderizar elementos HTML arbitrários no mapa.",
+      "props": {
+        "children": "Função de renderização recebendo '{ project }' para conversão de coordenadas para pixels.",
+        "className": "Classe CSS para o container HTML.",
+        "style": "Estilos inline para o container HTML."
+      }
+    },
+    "loader": {
+      "title": "Loader",
+      "description": "Um componente placeholder de mapa exibido enquanto dados assíncronos carregam. Usado automaticamente pelo GeoMap quando isLoading é true, e também pode ser usado de forma independente — por exemplo, antes de um componente de mapa carregado de forma lazy.",
+      "props": {
+        "ariaLabel": "Rótulo acessível para a região de carregamento. Anunciado por leitores de tela. Padrão: \"Loading map\".",
+        "className": "Classe CSS aplicada ao contêiner do loader.",
+        "style": "Estilos CSS inline aplicados ao contêiner do loader. Mesclado com os estilos de layout padrão."
+      }
+    }
+  },
+  "hooks": {
+    "useMap": {
+      "title": "useMap",
+      "description": "Retorna o contexto do mapa (centro, zoom, funções project/invert). Deve ser usado dentro de GeoMap.",
+      "returns": "MapContextValue com project(), invert(), center, zoom, width, height."
+    },
+    "useGeolocation": {
+      "title": "useGeolocation",
+      "description": "Encapsula a API de Geolocalização do navegador. Retorna a posição do usuário, estado de carregamento e erros. Por padrão monitora continuamente via watchPosition().",
+      "returns": "'{ position: { latitude, longitude, accuracy }' | null, error, loading '}'"
+    },
+    "useOsrmRoute": {
+      "title": "useOsrmRoute",
+      "description": "Busca geometria de roteamento rodoviário de uma API compatível com OSRM. Com cache em memória e limpeza via AbortController.",
+      "signature": "useOsrmRoute(waypoints, enabled, routingUrl?)",
+      "returns": "'{ data: { coordinates, distance, duration }' | null, loading, error '}'"
+    },
+    "useReverseGeocode": {
+      "title": "useReverseGeocode",
+      "description": "Chama a API de geocodificação reversa Nominatim (OpenStreetMap) para resolver coordenadas em um endereço.",
+      "signature": "useReverseGeocode(lat, lng)",
+      "returns": "'{ data: { road, suburb, city, state, country, postcode, displayName }' | null, loading, error '}'"
+    }
+  },
+  "headlessHooks": {
+    "title": "Hooks Headless",
+    "description": "Hooks headless fornecem a lógica e estado para componentes de mapa sem renderizar nenhuma UI. Use-os para construir componentes totalmente personalizados com sua própria marcação e estilização.",
+    "usePopup": {
+      "title": "usePopup",
+      "description": "Gerencia o posicionamento, auto-flip e estado de visibilidade do popup. Retorna style e props para espalhar no seu elemento de popup personalizado.",
+      "signature": "usePopup(options)",
+      "returns": "'{ style, isVisible, isFlipped, close, props, popupRef }'"
+    },
+    "useTooltip": {
+      "title": "useTooltip",
+      "description": "Gerencia o posicionamento do tooltip relativo a uma coordenada em pixels. Retorna style e props para o seu elemento de tooltip personalizado.",
+      "signature": "useTooltip(options)",
+      "returns": "'{ style, props }'"
+    },
+    "useMarker": {
+      "title": "useMarker",
+      "description": "Gerencia posicionamento do marcador, estado de arraste e culling de viewport. Retorna style, handlers e estado para o seu elemento de marcador personalizado.",
+      "signature": "useMarker(options)",
+      "returns": "'{ style, isOutOfView, isDragging, handlers, props }'"
+    },
+    "useCircle": {
+      "title": "useCircle",
+      "description": "Calcula o centro em pixels e o raio para um círculo geográfico. Retorna props SVG e estilo do container para o seu elemento de círculo personalizado.",
+      "signature": "useCircle(options)",
+      "returns": "'{ center, radiusPx, svgProps, containerStyle }'"
+    },
+    "useRouteLayer": {
+      "title": "useRouteLayer",
+      "description": "Calcula os dados do path SVG para uma rota e opcionalmente busca roteamento OSRM. Retorna dados do path e estado de carregamento para o seu elemento de rota personalizado.",
+      "signature": "useRouteLayer(options)",
+      "returns": "'{ pathD, svgProps, containerStyle, isLoading, routeData }'"
+    },
+    "useGeolocationDot": {
+      "title": "useGeolocationDot",
+      "description": "Rastreia a posição GPS do usuário e calcula coordenadas em pixels para o ponto e anel de precisão. Retorna dados de posição e estado para o seu elemento de geolocalização personalizado.",
+      "signature": "useGeolocationDot(options)",
+      "returns": "'{ position, dotCenter, accuracyRadiusPx, containerStyle, error, loading }'"
+    },
+    "useMapLayer": {
+      "title": "useMapLayer",
+      "description": "Fornece funções de projeção e dimensões do mapa para construir camadas personalizadas. Um wrapper de conveniência sobre useMap() otimizado para renderização de camadas.",
+      "signature": "useMapLayer()",
+      "returns": "'{ project, invert, width, height, zoom, center }'"
+    }
+  },
+  "theming": {
+    "title": "Tematização",
+    "description": "Todos os componentes BrownieJS suportam personalização visual via CSS custom properties (variáveis). Você pode defini-las globalmente no container do mapa ou usar MapThemeProvider para uma API amigável ao React.",
+    "cssVariablesTitle": "CSS Custom Properties",
+    "cssVariablesDescription": "Defina qualquer variável --bm-* em um elemento pai para tematizar todos os componentes BrownieJS dentro dele. Variáveis disponíveis: --bm-popup-bg, --bm-popup-color, --bm-popup-radius, --bm-popup-shadow, --bm-tooltip-bg, --bm-tooltip-color, --bm-tooltip-border, --bm-tooltip-radius, --bm-tooltip-shadow, --bm-marker-color, --bm-circle-color, --bm-circle-fill, --bm-route-color, --bm-geolocation-color, --bm-attribution-bg, --bm-focus-ring, --bm-control-bg, --bm-control-color, --bm-control-shadow, --bm-control-radius, --bm-control-padding, --bm-control-gap.",
+    "providerTitle": "MapThemeProvider",
+    "providerDescription": "Um componente React que converte um objeto de tema em CSS custom properties. Importe de @brownie-js/react/theme. Aceita chaves em camelCase que mapeiam para variáveis --bm-* (ex: popupBg se torna --bm-popup-bg)."
+  },
+  "controls": {
+    "title": "Controles Integrados",
+    "description": "Controles de mapa prontos para uso importados de @brownie-js/react/controls. Use-os dentro de MapControl para posicioná-los no mapa.",
+    "zoomControl": {
+      "title": "ZoomControl",
+      "description": "Fornece botões de zoom in (+) e zoom out (-) com acessibilidade por teclado."
+    },
+    "scaleBar": {
+      "title": "ScaleBar",
+      "description": "Exibe uma barra de escala de distância que atualiza com o nível de zoom atual. Suporta unidades métricas e imperiais.",
+      "props": {
+        "maxWidth": "Largura máxima da barra de escala em pixels.",
+        "unit": "Sistema de unidades: 'metric' ou 'imperial'."
+      }
+    }
+  }
+}

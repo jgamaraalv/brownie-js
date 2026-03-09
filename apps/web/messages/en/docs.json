@@ -1,0 +1,300 @@
+{
+  "title": "API Documentation",
+  "heroBadge": "Components & Hooks",
+  "subtitle": "A composable component model — GeoMap provides the container, and everything else is composed as children.",
+  "gettingStarted": {
+    "title": "Getting Started",
+    "installTitle": "Installation",
+    "exampleTitle": "Minimal Example",
+    "description": "BrownieJS uses a composable component model. GeoMap provides the map container with tile rendering. TileLayer, Marker, MarkerCluster, Popup, Circle, Route, and Geolocation are composed as children.",
+    "exampleNote": "GeoMap provides the map container and context. TileLayer renders OSM tiles. Marker, Route, and Geolocation are composed as children."
+  },
+  "sidebar": {
+    "gettingStarted": "Getting Started",
+    "components": "Components",
+    "hooks": "Hooks",
+    "headlessHooks": "Headless Hooks",
+    "customization": "Customization",
+    "controls": "Controls",
+    "mobileNav": "Documentation navigation",
+    "desktopNav": "Documentation navigation"
+  },
+  "propTable": {
+    "prop": "Prop",
+    "type": "Type",
+    "default": "Default",
+    "description": "Description"
+  },
+  "components": {
+    "geomap": {
+      "title": "GeoMap",
+      "description": "The root map container component. Provides a tile-based map with configurable center and zoom, auto-sizing via ResizeObserver, zoom and pan navigation, and context for all child components. Exposes an imperative handle via ref with flyTo(FlyToOptions) for animated transitions, fitBounds, and viewport queries.",
+      "props": {
+        "center": "Map center as [longitude, latitude].",
+        "zoom": "Initial zoom level.",
+        "style": "CSS styles for the map container.",
+        "className": "CSS class name for the map container.",
+        "bounds": "Initial bounds to fit the map to.",
+        "width": "Fixed width in pixels (auto-sizes if omitted).",
+        "height": "Fixed height in pixels (auto-sizes if omitted).",
+        "children": "Child components (TileLayer, Marker, Route, etc.).",
+        "mapLabel": "Accessible label for the map container.",
+        "minZoom": "Minimum zoom level.",
+        "maxZoom": "Maximum zoom level.",
+        "onZoomChange": "Fires during zoom with current zoom level.",
+        "onMoveEnd": "Fires when a zoom or pan interaction ends.",
+        "onClick": "Called when the map is clicked.",
+        "showAttribution": "Show the tile attribution overlay. Default: true.",
+        "isLoading": "When true, renders the loader placeholder instead of the map. Use while async data (markers, routes, etc.) is being fetched.",
+        "loader": "Custom loader element to render when isLoading is true. Defaults to the built-in <Loader /> component.",
+        "interactiveZoom": "Enables zoom via scroll wheel, pinch gesture, and double-click. Set to false to lock the zoom level while still allowing pan. Default: true.",
+        "onError": "Called when an error is thrown inside the map. Receives (error: Error, info: React.ErrorInfo). Use to connect error monitoring services like Sentry or Datadog."
+      }
+    },
+    "marker": {
+      "title": "Marker",
+      "description": "Renders a marker at a geographic coordinate. Supports custom SVG children, drag-and-drop, click handlers, and tooltips.",
+      "props": {
+        "coordinates": "Geographic coordinates [longitude, latitude] (GeoJSON convention).",
+        "color": "Marker fill color.",
+        "size": "Marker diameter in pixels.",
+        "draggable": "Whether marker can be dragged.",
+        "children": "Custom SVG content. Replaces default circle when provided.",
+        "icon": "Custom ReactNode to replace the default marker icon.",
+        "anchor": "Anchor point of the marker.",
+        "opacity": "Marker opacity (0–1).",
+        "onClick": "Called when marker is clicked.",
+        "onMouseEnter": "Called when mouse enters marker.",
+        "onMouseLeave": "Called when mouse leaves marker.",
+        "onDragEnd": "Called when drag completes with new geographic coordinates.",
+        "data": "Arbitrary data to associate with the marker.",
+        "animated": "Enable enter animation (fade-in + slide) when the marker mounts.",
+        "ariaLabel": "Accessible name for the marker."
+      }
+    },
+    "route": {
+      "title": "Route",
+      "description": "Draws an SVG path along a series of geographic coordinates. Supports custom stroke styling, dashed lines, OSRM routing integration, and tooltips.",
+      "props": {
+        "coordinates": "Array of geographic coordinates [longitude, latitude] defining the route.",
+        "color": "Stroke color.",
+        "strokeWidth": "Stroke width in pixels.",
+        "dashArray": "SVG stroke-dasharray for dashed lines (e.g. \"5,5\").",
+        "routing": "Enable OSRM routing.",
+        "routingUrl": "Custom OSRM endpoint URL.",
+        "onClick": "Called when the route path is clicked.",
+        "onMouseEnter": "Called when mouse enters the route path.",
+        "onMouseLeave": "Called when mouse leaves the route path.",
+        "onRouteLoaded": "Called when OSRM route data loads.",
+        "animated": "Enable ant trail animation along the route path.",
+        "animationSpeed": "Duration of one animation cycle in seconds.",
+        "ariaLabel": "Accessible name for the route."
+      }
+    },
+    "geolocation": {
+      "title": "Geolocation",
+      "description": "Accesses the browser Geolocation API to track the user's position. Can continuously watch position changes with configurable accuracy and timeout.",
+      "props": {
+        "watch": "Whether to continuously watch position.",
+        "enableHighAccuracy": "Enable high accuracy mode.",
+        "timeout": "Timeout in milliseconds.",
+        "maximumAge": "Maximum age of cached position in milliseconds.",
+        "onError": "Called when a geolocation error occurs."
+      }
+    },
+    "tilelayer": {
+      "title": "TileLayer",
+      "description": "Renders a tile grid from a URL template (e.g., OpenStreetMap). Must be placed inside GeoMap.",
+      "props": {
+        "url": "Tile URL template with '{'x'}', '{'y'}', '{'z'}' placeholders.",
+        "opacity": "Layer opacity (0–1).",
+        "zIndex": "CSS z-index for layer ordering."
+      }
+    },
+    "markercluster": {
+      "title": "MarkerCluster",
+      "description": "Groups nearby Marker children into clusters using a grid-based algorithm. Automatically re-clusters on zoom changes.",
+      "props": {
+        "radius": "Cluster grid cell size in pixels.",
+        "maxZoom": "Zoom level above which markers are not clustered.",
+        "renderCluster": "Custom render function for cluster markers.",
+        "onClick": "Called when a cluster is clicked.",
+        "animated": "Enable smooth transition animations when clusters merge or split.",
+        "categoryKey": "Data key used to group markers into categories within clusters.",
+        "categoryColors": "Map of category values to colors for multi-category cluster rendering.",
+        "children": "Marker components to cluster."
+      }
+    },
+    "popup": {
+      "title": "Popup",
+      "description": "An HTML overlay positioned at geographic coordinates. Can be used standalone or as a child of Marker.",
+      "props": {
+        "coordinates": "Geographic position [longitude, latitude]. Inherited from parent Marker if omitted.",
+        "offset": "Pixel offset [x, y] from the anchor position.",
+        "closeOnClick": "Whether clicking the map closes the popup.",
+        "onClose": "Called when the popup is closed.",
+        "className": "CSS class for the popup container.",
+        "style": "Inline styles for the popup container.",
+        "image": "Optional hero image displayed above the popup content.",
+        "children": "Popup content."
+      }
+    },
+    "circle": {
+      "title": "Circle",
+      "description": "Renders an SVG circle on the map with a geographic center and radius in meters.",
+      "props": {
+        "center": "Center coordinates [longitude, latitude].",
+        "radius": "Radius in meters.",
+        "color": "Stroke color.",
+        "fillColor": "Fill color.",
+        "strokeWidth": "Stroke width in pixels.",
+        "dashArray": "SVG stroke-dasharray for dashed borders.",
+        "opacity": "Overall opacity (0–1).",
+        "onClick": "Called when the circle is clicked.",
+        "ariaLabel": "Accessible name for the circle."
+      }
+    },
+    "tooltip": {
+      "title": "Tooltip",
+      "description": "A lightweight overlay that displays content at a pixel position. Typically used with mouse events on markers or routes.",
+      "props": {
+        "x": "Horizontal pixel position.",
+        "y": "Vertical pixel position.",
+        "content": "Tooltip content.",
+        "className": "CSS class for the tooltip container.",
+        "style": "Inline styles for the tooltip container."
+      }
+    },
+    "mapcontrol": {
+      "title": "MapControl",
+      "description": "Positions child controls in a corner of the map. Use with built-in controls (ZoomControl, ScaleBar) or any custom content.",
+      "props": {
+        "position": "Corner position: 'top-left', 'top-right', 'bottom-left', or 'bottom-right'.",
+        "children": "Control content to render in the map corner.",
+        "className": "CSS class for the control container.",
+        "style": "Inline styles for the control container."
+      }
+    },
+    "svglayer": {
+      "title": "SVGLayer",
+      "description": "A custom SVG overlay layer. Provides a project() render prop that converts geographic coordinates to pixel positions, allowing you to draw arbitrary SVG shapes on the map.",
+      "props": {
+        "children": "Render function receiving '{ project }' for coordinate-to-pixel conversion.",
+        "className": "CSS class for the SVG container.",
+        "style": "Inline styles for the SVG container."
+      }
+    },
+    "htmllayer": {
+      "title": "HTMLLayer",
+      "description": "A custom HTML overlay layer. Provides a project() render prop that converts geographic coordinates to pixel positions, allowing you to render arbitrary HTML elements on the map.",
+      "props": {
+        "children": "Render function receiving '{ project }' for coordinate-to-pixel conversion.",
+        "className": "CSS class for the HTML container.",
+        "style": "Inline styles for the HTML container."
+      }
+    },
+    "loader": {
+      "title": "Loader",
+      "description": "A standalone map placeholder component rendered while async data loads. Used automatically by GeoMap when isLoading is true, and can also be used independently — for example, before a lazy-loaded map component mounts.",
+      "props": {
+        "ariaLabel": "Accessible label for the loading region. Announced by screen readers. Default: \"Loading map\".",
+        "className": "CSS class name applied to the loader container.",
+        "style": "Inline CSS styles applied to the loader container. Merged with default layout styles."
+      }
+    }
+  },
+  "hooks": {
+    "useMap": {
+      "title": "useMap",
+      "description": "Returns the map context (center, zoom, project/invert functions). Must be used inside GeoMap.",
+      "returns": "MapContextValue with project(), invert(), center, zoom, width, height."
+    },
+    "useGeolocation": {
+      "title": "useGeolocation",
+      "description": "Wraps the browser Geolocation API. Returns the user's position, loading state, and errors. By default continuously watches via watchPosition().",
+      "returns": "'{ position: { latitude, longitude, accuracy }' | null, error, loading '}'"
+    },
+    "useOsrmRoute": {
+      "title": "useOsrmRoute",
+      "description": "Fetches road routing geometry from an OSRM-compatible API. Features in-memory caching and AbortController cleanup.",
+      "signature": "useOsrmRoute(waypoints, enabled, routingUrl?)",
+      "returns": "'{ data: { coordinates, distance, duration }' | null, loading, error '}'"
+    },
+    "useReverseGeocode": {
+      "title": "useReverseGeocode",
+      "description": "Calls the Nominatim (OpenStreetMap) reverse geocoding API to resolve coordinates into an address.",
+      "signature": "useReverseGeocode(lat, lng)",
+      "returns": "'{ data: { road, suburb, city, state, country, postcode, displayName }' | null, loading, error '}'"
+    }
+  },
+  "headlessHooks": {
+    "title": "Headless Hooks",
+    "description": "Headless hooks provide the logic and state for map components without rendering any UI. Use them to build fully custom components with your own markup and styling.",
+    "usePopup": {
+      "title": "usePopup",
+      "description": "Manages popup positioning, auto-flip, and visibility state. Returns style and props to spread on your custom popup element.",
+      "signature": "usePopup(options)",
+      "returns": "'{ style, isVisible, isFlipped, close, props, popupRef }'"
+    },
+    "useTooltip": {
+      "title": "useTooltip",
+      "description": "Manages tooltip positioning relative to a pixel coordinate. Returns style and props for your custom tooltip element.",
+      "signature": "useTooltip(options)",
+      "returns": "'{ style, props }'"
+    },
+    "useMarker": {
+      "title": "useMarker",
+      "description": "Manages marker positioning, drag state, and viewport culling. Returns style, handlers, and state for your custom marker element.",
+      "signature": "useMarker(options)",
+      "returns": "'{ style, isOutOfView, isDragging, handlers, props }'"
+    },
+    "useCircle": {
+      "title": "useCircle",
+      "description": "Computes the pixel center and radius for a geographic circle. Returns SVG props and container style for your custom circle element.",
+      "signature": "useCircle(options)",
+      "returns": "'{ center, radiusPx, svgProps, containerStyle }'"
+    },
+    "useRouteLayer": {
+      "title": "useRouteLayer",
+      "description": "Computes the SVG path data for a route and optionally fetches OSRM routing. Returns path data and loading state for your custom route element.",
+      "signature": "useRouteLayer(options)",
+      "returns": "'{ pathD, svgProps, containerStyle, isLoading, routeData }'"
+    },
+    "useGeolocationDot": {
+      "title": "useGeolocationDot",
+      "description": "Tracks the user's GPS position and computes pixel coordinates for the dot and accuracy ring. Returns position data and state for your custom geolocation element.",
+      "signature": "useGeolocationDot(options)",
+      "returns": "'{ position, dotCenter, accuracyRadiusPx, containerStyle, error, loading }'"
+    },
+    "useMapLayer": {
+      "title": "useMapLayer",
+      "description": "Provides projection functions and map dimensions for building custom layers. A convenience wrapper around useMap() optimized for layer rendering.",
+      "signature": "useMapLayer()",
+      "returns": "'{ project, invert, width, height, zoom, center }'"
+    }
+  },
+  "theming": {
+    "title": "Theming",
+    "description": "All BrownieJS components support visual customization via CSS custom properties (variables). You can set them globally on your map container or use MapThemeProvider for a React-friendly API.",
+    "cssVariablesTitle": "CSS Custom Properties",
+    "cssVariablesDescription": "Set any --bm-* variable on a parent element to theme all BrownieJS components within it. Available variables: --bm-popup-bg, --bm-popup-color, --bm-popup-radius, --bm-popup-shadow, --bm-tooltip-bg, --bm-tooltip-color, --bm-tooltip-border, --bm-tooltip-radius, --bm-tooltip-shadow, --bm-marker-color, --bm-circle-color, --bm-circle-fill, --bm-route-color, --bm-geolocation-color, --bm-attribution-bg, --bm-focus-ring, --bm-control-bg, --bm-control-color, --bm-control-shadow, --bm-control-radius, --bm-control-padding, --bm-control-gap.",
+    "providerTitle": "MapThemeProvider",
+    "providerDescription": "A React component that converts a theme object into CSS custom properties. Import from @brownie-js/react/theme. Accepts camelCase keys that map to --bm-* variables (e.g. popupBg becomes --bm-popup-bg)."
+  },
+  "controls": {
+    "title": "Built-in Controls",
+    "description": "Ready-to-use map controls imported from @brownie-js/react/controls. Use them inside MapControl to position them on the map.",
+    "zoomControl": {
+      "title": "ZoomControl",
+      "description": "Provides zoom in (+) and zoom out (-) buttons with keyboard accessibility."
+    },
+    "scaleBar": {
+      "title": "ScaleBar",
+      "description": "Displays a distance scale bar that updates with the current zoom level. Supports metric and imperial units.",
+      "props": {
+        "maxWidth": "Maximum width of the scale bar in pixels.",
+        "unit": "Unit system: 'metric' or 'imperial'."
+      }
+    }
+  }
+}

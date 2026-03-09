@@ -1,0 +1,27 @@
+{
+  "title": "BrownieJS | Biblioteca de mapas React com 9 kB e zero dependências",
+  "description": "Biblioteca de mapas React com 9 kB e zero dependências. Tiles, marcadores, rotas e clustering — sem Leaflet ou Mapbox.",
+  "nav": {
+    "home": "Início",
+    "docs": "Docs",
+    "why": "Por quê",
+    "recipes": "Receitas"
+  },
+  "theme": { "toggle": "Alternar modo escuro" },
+  "footer": {
+    "credit": "Em memória de Brownie (2024–2025), um pequeno explorador com o maior coração",
+    "github": "GitHub",
+    "npm": "npm"
+  },
+  "language": { "switch": "Mudar idioma", "en": "English", "pt": "Português" },
+  "error": {
+    "title": "Algo deu errado",
+    "description": "Ocorreu um erro inesperado. Tente novamente.",
+    "retry": "Tentar novamente"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "A página que você procura não existe ou foi movida.",
+    "backHome": "Voltar ao início"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "title": "BrownieJS | A 9 kB React map library with zero dependencies",
+  "description": "A 9 kB React map library with zero dependencies. Tiles, markers, routes, and clustering — no Leaflet or Mapbox required.",
+  "nav": { "home": "Home", "docs": "Docs", "why": "Why", "recipes": "Recipes" },
+  "theme": { "toggle": "Toggle dark mode" },
+  "footer": {
+    "credit": "In memory of Brownie (2024–2025), a little explorer with the biggest heart",
+    "github": "GitHub",
+    "npm": "npm"
+  },
+  "language": {
+    "switch": "Switch language",
+    "en": "English",
+    "pt": "Português"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "retry": "Try again"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to home"
+  }
+}

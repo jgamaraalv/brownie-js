@@ -1,0 +1,17 @@
+{
+  "title": "Recipes",
+  "heroBadge": "Copy & Paste",
+  "subtitle": "Ready-to-use examples. Copy, paste, and customize.",
+  "storeLocator": {
+    "title": "Store Locator",
+    "description": "Display store locations on a map with clickable markers and info popups. Great for retail sites, restaurant finders, or any location directory."
+  },
+  "deliveryTracker": {
+    "title": "Delivery Tracker",
+    "description": "Animated route with ant trail effect, restaurant popup with image, and delivery destination marker."
+  },
+  "realEstate": {
+    "title": "Real Estate Map",
+    "description": "Property listings with category-based color clustering, image popups, and animated markers."
+  }
+}

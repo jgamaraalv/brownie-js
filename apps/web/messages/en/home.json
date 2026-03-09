@@ -1,0 +1,65 @@
+{
+  "hero": {
+    "tagline": "The 9 kB map library for React.",
+    "subtitle": "Zero dependencies. No Leaflet, no Mapbox — just tiles, vectors, and full control.",
+    "cta": "View the Docs",
+    "installCommand": "npm install @brownie-js/react"
+  },
+  "features": {
+    "title": "Why BrownieJS?",
+    "zeroDep": {
+      "title": "Zero Dependencies",
+      "description": "No Leaflet, no Mapbox. Pure TypeScript — you own every pixel."
+    },
+    "bundleSize": {
+      "title": "Tiny Bundle",
+      "description": "~9kB gzipped. Ship interactive maps without bloating your app."
+    },
+    "tested": {
+      "title": "Thoroughly Tested",
+      "description": "Comprehensive test suite covering every component and hook."
+    },
+    "accessible": {
+      "title": "Accessible",
+      "description": "Keyboard navigation, ARIA labels, focus indicators. WCAG 2.1 AA compliant."
+    }
+  },
+  "demos": {
+    "title": "See it in action",
+    "tilesMap": {
+      "title": "Interactive Tile Map",
+      "description": "OpenStreetMap tiles with markers, clusters, popups, and geographic circles. Pan and zoom to explore."
+    },
+    "geolocation": {
+      "title": "Geolocation",
+      "description": "Detect the user's position with a pulsing marker. Starts simulated — click the button to use your real location.",
+      "ctaButton": "Test with my location"
+    },
+    "theme": {
+      "title": "Theming",
+      "description": "Customize every component with MapThemeProvider. Pass a theme object and all markers, popups, controls, and focus rings update instantly."
+    },
+    "routes": {
+      "title": "Routes",
+      "description": "Road routing between waypoints powered by OSRM. Explore different routing modes.",
+      "tabs": {
+        "fixed": "Fixed Route",
+        "interactive": "Interactive",
+        "multipoint": "Multi-point",
+        "toHere": "Route to Here"
+      },
+      "distance": "Distance",
+      "duration": "Duration",
+      "clickMarker": "Click a marker to calculate route"
+    }
+  },
+  "story": {
+    "title": "Why \"Brownie\"?",
+    "text": "Brownie was a Shih Tzu who came into this world in our hands and left the same way — too soon, at just a year and a half. He had a heart that was bigger than his small body could hold. This library carries his name because every project should be built with the same joy he brought to everything he explored. Maps help us find our way. Brownie helped us find ours."
+  },
+  "cta": {
+    "title": "Add maps in 5 lines of code.",
+    "description": "Install, compose, ship. BrownieJS works with any React setup.",
+    "button": "View the Docs"
+  }
+}
