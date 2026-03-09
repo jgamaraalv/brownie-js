@@ -1,6 +1,6 @@
 {
   "name": "@brownie-js/react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
@@ -51,6 +51,13 @@
       "require": { "types": "./dist/geo/index.d.cts", "default": "./dist/geo/index.cjs" }
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jgamaraalv/brownie-js.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/jgamaraalv/brownie-js#readme",
+  "bugs": "https://github.com/jgamaraalv/brownie-js/issues",
   "files": [
     "dist"
   ],

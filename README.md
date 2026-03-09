@@ -12,7 +12,7 @@ A lightweight interactive map library for React built on a tiles-first architect
 
 - **Zero dependencies** — No Leaflet, Mapbox, or Google Maps required
 - **Tiny bundle** — ~9 kB gzipped total (core + react)
-- **206+ tests** — Thoroughly tested with Vitest and Testing Library
+- **409+ tests** — Thoroughly tested with Vitest and Testing Library
 - **Accessible** — WCAG 2.1 AA patterns (keyboard navigation, ARIA roles, roving tabindex)
 - **Tiles-first architecture** — Tile base layer + SVG vectors + HTML overlays
 - **GPU-first animations** — Smooth flyTo, marker enter/exit, route ant trail, cluster transitions (60fps, `translate3d`/`opacity` only)
