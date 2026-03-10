@@ -24,7 +24,7 @@
     "url": "https://github.com/jgamaraalv/brownie-js.git",
     "directory": "packages/core"
   },
-  "homepage": "https://github.com/jgamaraalv/brownie-js#readme",
+  "homepage": "https://www.browniejs.com",
   "bugs": "https://github.com/jgamaraalv/brownie-js/issues",
   "files": [
     "dist"

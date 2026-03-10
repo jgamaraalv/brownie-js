@@ -39,16 +39,34 @@
       }
     },
     "./cluster": {
-      "import": { "types": "./dist/cluster/index.d.ts", "default": "./dist/cluster/index.js" },
-      "require": { "types": "./dist/cluster/index.d.cts", "default": "./dist/cluster/index.cjs" }
+      "import": {
+        "types": "./dist/cluster/index.d.ts",
+        "default": "./dist/cluster/index.js"
+      },
+      "require": {
+        "types": "./dist/cluster/index.d.cts",
+        "default": "./dist/cluster/index.cjs"
+      }
     },
     "./route": {
-      "import": { "types": "./dist/route/index.d.ts", "default": "./dist/route/index.js" },
-      "require": { "types": "./dist/route/index.d.cts", "default": "./dist/route/index.cjs" }
+      "import": {
+        "types": "./dist/route/index.d.ts",
+        "default": "./dist/route/index.js"
+      },
+      "require": {
+        "types": "./dist/route/index.d.cts",
+        "default": "./dist/route/index.cjs"
+      }
     },
     "./geo": {
-      "import": { "types": "./dist/geo/index.d.ts", "default": "./dist/geo/index.js" },
-      "require": { "types": "./dist/geo/index.d.cts", "default": "./dist/geo/index.cjs" }
+      "import": {
+        "types": "./dist/geo/index.d.ts",
+        "default": "./dist/geo/index.js"
+      },
+      "require": {
+        "types": "./dist/geo/index.d.cts",
+        "default": "./dist/geo/index.cjs"
+      }
     }
   },
   "repository": {
@@ -56,7 +74,7 @@
     "url": "https://github.com/jgamaraalv/brownie-js.git",
     "directory": "packages/react"
   },
-  "homepage": "https://github.com/jgamaraalv/brownie-js#readme",
+  "homepage": "https://www.browniejs.com",
   "bugs": "https://github.com/jgamaraalv/brownie-js/issues",
   "files": [
     "dist"
