@@ -10,8 +10,7 @@
     "exampleNote": "GeoMap fornece o container do mapa e contexto. TileLayer renderiza tiles OSM. Marker, Route e Geolocation são compostos como filhos.",
     "coordTitle": "Convenção de Coordenadas",
     "coordDescription": "BrownieJS usa a ordem [longitude, latitude] — o padrão GeoJSON — em todas as props de coordenadas (center, coordinates, bounds). Isso é o oposto do Leaflet, que usa [lat, lng].",
-    "coordLeafletMigration": "Migrando do Leaflet? Inverta suas coordenadas: o [lat, lng] do Leaflet vira [lng, lat] no BrownieJS.",
-    "coordExample": "// Leaflet (lat, lng):\ncenter={[-23.55, -46.63]}\n\n// BrownieJS (lon, lat) — GeoJSON:\ncenter={[-46.63, -23.55]}"
+    "coordLeafletMigration": "Migrando do Leaflet? Inverta suas coordenadas: o [lat, lng] do Leaflet vira [lng, lat] no BrownieJS."
   },
   "sidebar": {
     "gettingStarted": "Primeiros Passos",
@@ -35,7 +34,6 @@
       "description": "O componente raiz do mapa. Fornece um mapa baseado em tiles com centro e zoom configuráveis, dimensionamento automático via ResizeObserver, navegação com zoom e pan, e contexto para todos os componentes filhos. Expõe um handle imperativo via ref com flyTo(), fitBounds(), getZoom(), getCenter() e getBounds().",
       "imperativeTitle": "Handle Imperativo (ref)",
       "imperativeDescription": "GeoMap aceita uma ref que expõe métodos para controle programático — útil quando você precisa navegar no mapa de fora da árvore de componentes (ex: botão \"usar minha localização\").",
-      "imperativeSignatures": "flyTo(options: FlyToOptions): void\nflyTo(center: [number, number], zoom?: number): void\nfitBounds(bounds: { sw: [number, number]; ne: [number, number] }, padding?: number): void\ngetZoom(): number\ngetCenter(): [number, number]\ngetBounds(): { sw: [number, number]; ne: [number, number] }",
       "imperativeFlyToNote": "flyTo() anima até a posição alvo usando RequestAnimationFrame. Aceita duration opcional (padrão 300ms) e função de easing. Respeita prefers-reduced-motion: se o usuário tiver redução de movimento ativada, o mapa pula instantaneamente.",
       "props": {
         "center": "Centro do mapa como [longitude, latitude].",

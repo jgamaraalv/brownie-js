@@ -2,6 +2,13 @@ import { getTranslations } from "next-intl/server";
 import { CodeBlock } from "./CodeBlock";
 import { PropTable } from "./PropTable";
 
+const imperativeSignatures = `flyTo(options: FlyToOptions): void
+flyTo(center: [number, number], zoom?: number): void
+fitBounds(bounds: { sw: [number, number]; ne: [number, number] }, padding?: number): void
+getZoom(): number
+getCenter(): [number, number]
+getBounds(): { sw: [number, number]; ne: [number, number] }`;
+
 const imperativeExample = `import { useRef } from 'react';
 import { GeoMap, TileLayer, GeoMapHandle } from '@brownie-js/react';
 
@@ -200,9 +207,7 @@ export async function GeoMapDocs() {
         <CodeBlock code={imperativeExample} lang="tsx" />
       </div>
       <div className="bg-surface-container mt-4 rounded-lg p-4">
-        <pre className="text-on-surface-muted text-sm leading-relaxed whitespace-pre-wrap">
-          {t("components.geomap.imperativeSignatures")}
-        </pre>
+        <pre className="text-on-surface-muted text-sm leading-relaxed whitespace-pre-wrap">{imperativeSignatures}</pre>
       </div>
       <p className="text-on-surface-muted mt-3 text-sm leading-relaxed">
         {t("components.geomap.imperativeFlyToNote")}

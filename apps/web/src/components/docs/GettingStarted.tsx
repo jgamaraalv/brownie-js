@@ -2,6 +2,12 @@ import { InstallCommand } from "@/components/landing/InstallCommand";
 import { getTranslations } from "next-intl/server";
 import { CodeBlock } from "./CodeBlock";
 
+const coordExample = `// Leaflet (lat, lng):
+center={[-23.55, -46.63]}
+
+// BrownieJS (lon, lat) — GeoJSON:
+center={[-46.63, -23.55]}`;
+
 const minimalExample = `import { GeoMap, TileLayer, Marker } from '@brownie-js/react';
 
 function MyMap() {
@@ -52,7 +58,7 @@ export async function GettingStarted() {
         {t("gettingStarted.coordDescription")}
       </p>
       <div className="mt-3">
-        <CodeBlock code={t("gettingStarted.coordExample")} lang="tsx" />
+        <CodeBlock code={coordExample} lang="tsx" />
       </div>
       <p className="bg-surface-container border-primary mt-4 rounded-lg border-l-4 px-4 py-3 text-sm leading-relaxed">
         {t("gettingStarted.coordLeafletMigration")}

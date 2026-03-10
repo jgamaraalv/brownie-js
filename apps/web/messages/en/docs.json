@@ -10,8 +10,7 @@
     "exampleNote": "GeoMap provides the map container and context. TileLayer renders OSM tiles. Marker, Route, and Geolocation are composed as children.",
     "coordTitle": "Coordinate Convention",
     "coordDescription": "BrownieJS uses [longitude, latitude] order — the GeoJSON standard — for all coordinate props (center, coordinates, bounds). This is the opposite of Leaflet, which uses [lat, lng].",
-    "coordLeafletMigration": "Migrating from Leaflet? Flip your coordinates: Leaflet's [lat, lng] becomes [lng, lat] in BrownieJS.",
-    "coordExample": "// Leaflet (lat, lng):\ncenter={[-23.55, -46.63]}\n\n// BrownieJS (lon, lat) — GeoJSON:\ncenter={[-46.63, -23.55]}"
+    "coordLeafletMigration": "Migrating from Leaflet? Flip your coordinates: Leaflet's [lat, lng] becomes [lng, lat] in BrownieJS."
   },
   "sidebar": {
     "gettingStarted": "Getting Started",
@@ -35,7 +34,6 @@
       "description": "The root map container component. Provides a tile-based map with configurable center and zoom, auto-sizing via ResizeObserver, zoom and pan navigation, and context for all child components. Exposes an imperative handle via ref with flyTo(), fitBounds(), getZoom(), getCenter(), and getBounds().",
       "imperativeTitle": "Imperative Handle (ref)",
       "imperativeDescription": "GeoMap accepts a ref that exposes methods for programmatic control — useful when you need to navigate the map from outside the component tree (e.g. a \"use my location\" button).",
-      "imperativeSignatures": "flyTo(options: FlyToOptions): void\nflyTo(center: [number, number], zoom?: number): void\nfitBounds(bounds: { sw: [number, number]; ne: [number, number] }, padding?: number): void\ngetZoom(): number\ngetCenter(): [number, number]\ngetBounds(): { sw: [number, number]; ne: [number, number] }",
       "imperativeFlyToNote": "flyTo() animates to the target position using RequestAnimationFrame. Accepts an optional duration (default 300ms) and easing function. Respects prefers-reduced-motion: if the user has reduced motion enabled, the map jumps instantly instead of animating.",
       "props": {
         "center": "Map center as [longitude, latitude].",
