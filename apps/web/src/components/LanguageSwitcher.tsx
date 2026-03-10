@@ -21,7 +21,7 @@ export function LanguageSwitcher({ label }: LanguageSwitcherProps) {
   return (
     <button
       type="button"
-      aria-label={label}
+      aria-label={`${locale.toUpperCase()} – ${label}`}
       onClick={handleSwitch}
       className="cursor-pointer rounded-lg p-2 text-sm font-medium transition-colors hover:bg-on-surface/5"
     >

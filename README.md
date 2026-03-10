@@ -42,6 +42,8 @@ function App() {
 }
 ```
 
+See full documentation at [browniejs.com/docs](https://www.browniejs.com/docs).
+
 ## Components
 
 | Component       | Description                                              |

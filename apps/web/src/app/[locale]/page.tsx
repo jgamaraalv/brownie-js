@@ -26,10 +26,24 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "common" });
+  const title = t("title");
+  const description = t("description");
 
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
+    alternates: {
+      canonical: `https://www.browniejs.com/${locale}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://www.browniejs.com/${locale}`,
+    },
+    twitter: {
+      title,
+      description,
+    },
   };
 }
 
