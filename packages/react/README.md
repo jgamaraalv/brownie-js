@@ -23,6 +23,10 @@ Brownie Maps is a lightweight React library for rendering interactive tile-based
 - **Geolocation** — track user position with accuracy ring and pulse animation
 - **Circles** — geographic circles with meter-to-pixel conversion
 - **Popups & Tooltips** — positioned overlay components, popups with image support
+- **Custom overlays** — `SVGLayer` and `HTMLLayer` for fully custom map layers using a `project()` render prop
+- **Map controls** — `MapControl` positions controls in map corners; built-in `ZoomControl` and `ScaleBar`
+- **CSS theming** — `MapThemeProvider` exposes CSS custom properties for consistent styling
+- **Headless hooks** — `useMarker`, `usePopup`, `useCircle`, `useTooltip` for custom render implementations
 - **Keyboard accessible** — keyboard navigation, Enter/Space activation, ARIA roles
 - **Responsive** — auto-sizes to container via ResizeObserver
 - **TypeScript-first** — complete type definitions for all components and hooks
@@ -257,11 +261,96 @@ Renders user's GPS position as a blue dot with accuracy ring and pulse animation
 
 Auto-renders tile attribution (e.g. OpenStreetMap). Managed internally by `GeoMap`.
 
+### MapControl
+
+Positions child elements as absolute overlays in a map corner.
+
+```tsx
+import { MapControl, ZoomControl } from "@brownie-js/react";
+import { ZoomControl, ScaleBar } from "@brownie-js/react/controls";
+
+<GeoMap ...>
+  <TileLayer />
+  <MapControl position="top-right">
+    <ZoomControl />
+  </MapControl>
+  <MapControl position="bottom-left">
+    <ScaleBar />
+  </MapControl>
+</GeoMap>
+```
+
+| Prop        | Type                                                        | Default  | Description                              |
+| ----------- | ----------------------------------------------------------- | -------- | ---------------------------------------- |
+| `position`  | `'top-left' \| 'top-right' \| 'bottom-left' \| 'bottom-right'` | required | Corner to anchor the control.       |
+| `className` | `string`                                                    | —        | CSS class for the control wrapper.       |
+| `style`     | `CSSProperties`                                             | —        | Inline styles.                           |
+
+### SVGLayer
+
+Custom SVG overlay that re-renders on pan/zoom. Receives a `project(lon, lat)` render prop.
+
+```tsx
+<SVGLayer>
+  {(project) => {
+    const [x, y] = project(-43.17, -22.91);
+    return <circle cx={x} cy={y} r={10} fill="red" />;
+  }}
+</SVGLayer>
+```
+
+| Prop          | Type                                                   | Default | Description                              |
+| ------------- | ------------------------------------------------------ | ------- | ---------------------------------------- |
+| `children`    | `(project) => ReactNode`                               | required | Render prop receiving `project(lon, lat)`. |
+| `zIndex`      | `number`                                               | `1`     | SVG stacking order.                      |
+| `interactive` | `boolean`                                              | `false` | Enable pointer events on the SVG.        |
+| `className`   | `string`                                               | —       | CSS class for the SVG element.           |
+
+### HTMLLayer
+
+Custom HTML overlay that re-renders on pan/zoom. Receives a `project(lon, lat)` render prop.
+
+```tsx
+<HTMLLayer>
+  {(project) => {
+    const [x, y] = project(-43.17, -22.91);
+    return (
+      <div style={{ position: "absolute", left: x, top: y }}>
+        Custom overlay
+      </div>
+    );
+  }}
+</HTMLLayer>
+```
+
+| Prop          | Type                     | Default  | Description                                 |
+| ------------- | ------------------------ | -------- | ------------------------------------------- |
+| `children`    | `(project) => ReactNode` | required | Render prop receiving `project(lon, lat)`.  |
+| `zIndex`      | `number`                 | `1`      | Layer stacking order.                       |
+| `interactive` | `boolean`                | `false`  | Enable pointer events on the HTML layer.    |
+| `className`   | `string`                 | —        | CSS class for the wrapper div.              |
+
+### Loader
+
+Full-area loading state placeholder with a map-pin icon and spinner.
+
+```tsx
+<div style={{ width: "100%", height: 400 }}>
+  {isLoading ? <Loader ariaLabel="Loading map" /> : <GeoMap ...>...</GeoMap>}
+</div>
+```
+
+| Prop        | Type            | Default         | Description                     |
+| ----------- | --------------- | --------------- | ------------------------------- |
+| `ariaLabel` | `string`        | `'Loading map'` | Accessible status label.        |
+| `className` | `string`        | —               | CSS class for the container.    |
+| `style`     | `CSSProperties` | —               | Inline styles for the container.|
+
 ## Hooks
 
 ### useMap()
 
-Access the map context. Must be inside `<GeoMap>`.
+Access the map context. Must be inside `<GeoMap>`. Does **not** re-render on pan/zoom.
 
 ```tsx
 const { project, invert, stateRef, width, height } = useMap();
@@ -271,32 +360,142 @@ const [lon, lat] = invert(400, 300);
 
 ### useMapSubscription()
 
-Like `useMap()` but subscribes to state changes — re-renders on pan/zoom.
+Like `useMap()` but subscribes to state changes — re-renders on every pan/zoom.
+
+### useMapLayer()
+
+Projection hook for components that need `project`/`invert` plus current `zoom`, `center`, `width`, `height`. Re-renders on pan/zoom.
+
+```tsx
+const { project, invert, zoom, center, width, height } = useMapLayer();
+```
+
+### useMarker(options)
+
+Headless marker hook. Returns computed styles, visibility flag, drag handlers, and ARIA props. Use to build fully custom marker components.
+
+```tsx
+const { style, isOutOfView, isDragging, handlers, props } = useMarker({
+  coordinates: [-43.17, -22.91],
+  anchor: "bottom",
+  draggable: true,
+  onDragEnd: (coords) => console.log(coords),
+});
+```
+
+### usePopup(options)
+
+Headless popup hook. Returns positioned style, flip state, visibility, and close handler.
+
+```tsx
+const { style, isVisible, isFlipped, close, props, popupRef } = usePopup({
+  coordinates: [-43.17, -22.91],
+});
+```
+
+### useCircle(options)
+
+Headless circle hook. Returns the SVG center point, radius in pixels, and container style.
+
+```tsx
+const { center, radiusPx, svgProps, containerStyle } = useCircle({
+  center: [-43.17, -22.91],
+  radius: 5000,
+});
+```
+
+### useTooltip(options)
+
+Headless tooltip hook. Returns positioned style and ARIA props.
+
+```tsx
+const { style, props } = useTooltip({ x, y });
+```
+
+### useMergedRef(...refs)
+
+Utility to merge multiple refs (callback or object) into a single callback ref.
+
+```tsx
+const ref = useMergedRef(localRef, forwardedRef);
+```
 
 ### useGeolocation(options?)
 
-Browser Geolocation API wrapper.
+Browser Geolocation API wrapper. Available from `@brownie-js/react/geo`.
 
 ```tsx
+import { useGeolocation } from "@brownie-js/react/geo";
+
 const { position, error, loading } = useGeolocation({
   enableHighAccuracy: true,
 });
 ```
 
-### useOsrmRoute(waypoints, enabled, url?)
+### useGeolocationDot(options?)
 
-Fetch road routes from an OSRM-compatible API. Includes in-memory caching and AbortController cleanup.
+Headless geolocation dot hook — computes dot position, accuracy ring radius, and container style. Available from `@brownie-js/react/geo`.
 
 ```tsx
+import { useGeolocationDot } from "@brownie-js/react/geo";
+
+const { position, dotCenter, accuracyRadiusPx, containerStyle, error, loading } =
+  useGeolocationDot({ enableHighAccuracy: true });
+```
+
+### useOsrmRoute(waypoints, enabled, url?)
+
+Fetch road routes from an OSRM-compatible API. Includes in-memory caching and AbortController cleanup. Available from `@brownie-js/react/route`.
+
+```tsx
+import { useOsrmRoute } from "@brownie-js/react/route";
+
 const { data, loading, error } = useOsrmRoute(waypoints, true);
+```
+
+### useRouteLayer(options)
+
+Headless route layer hook — returns the SVG path `d` attribute, SVG container props, and route metadata. Available from `@brownie-js/react/route`.
+
+```tsx
+import { useRouteLayer } from "@brownie-js/react/route";
+
+const { pathD, svgProps, containerStyle, isLoading, routeData } = useRouteLayer({
+  coordinates: [[-43.17, -22.91], [-46.63, -23.55]],
+  routing: true,
+});
 ```
 
 ### useReverseGeocode(lat, lng)
 
-Reverse geocoding via Nominatim.
+Reverse geocoding via Nominatim. Available from `@brownie-js/react/geo`.
 
 ```tsx
+import { useReverseGeocode } from "@brownie-js/react/geo";
+
 const { data, loading, error } = useReverseGeocode(-22.91, -43.17);
+```
+
+## Sub-exports
+
+The package uses entry-point sub-exports to keep the main bundle small:
+
+| Import path                    | Exports                                                   |
+| ------------------------------ | --------------------------------------------------------- |
+| `@brownie-js/react`            | Core components and headless hooks                        |
+| `@brownie-js/react/controls`   | `ZoomControl`, `ScaleBar`                                 |
+| `@brownie-js/react/cluster`    | `MarkerCluster`                                           |
+| `@brownie-js/react/route`      | `Route`, `useOsrmRoute`, `useRouteLayer`                  |
+| `@brownie-js/react/geo`        | `Geolocation`, `useGeolocation`, `useGeolocationDot`, `useReverseGeocode` |
+| `@brownie-js/react/theme`      | `MapThemeProvider`                                        |
+
+```tsx
+import { GeoMap, TileLayer, Marker } from "@brownie-js/react";
+import { MarkerCluster } from "@brownie-js/react/cluster";
+import { Route, useOsrmRoute } from "@brownie-js/react/route";
+import { Geolocation, useGeolocation } from "@brownie-js/react/geo";
+import { ZoomControl, ScaleBar } from "@brownie-js/react/controls";
+import { MapThemeProvider } from "@brownie-js/react/theme";
 ```
 
 ## Accessibility
