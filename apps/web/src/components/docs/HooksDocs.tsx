@@ -216,6 +216,16 @@ export async function HooksDocs() {
         <p className="text-on-surface-muted mt-1 text-sm">
           <strong>Returns:</strong> {t("headlessHooks.useMapLayer.returns")}
         </p>
+
+        <h4 className="text-on-surface mt-6 font-display text-base font-semibold">
+          {t("headlessHooks.useMapLayer.circleMarkerTitle")}
+        </h4>
+        <p className="text-on-surface-muted mt-2 text-sm leading-relaxed">
+          {t("headlessHooks.useMapLayer.circleMarkerNote")}
+        </p>
+        <div className="mt-3">
+          <CodeBlock code={circleMarkerEquivalentExample} lang="tsx" />
+        </div>
       </section>
     </div>
   );
@@ -223,11 +233,34 @@ export async function HooksDocs() {
 
 const useMapExample = `import { useMap } from '@brownie-js/react';
 
+// Programmatic navigation
+function NavigationButton() {
+  const { flyTo } = useMap();
+
+  return (
+    <button onClick={() => flyTo([-46.63, -23.55], 12)}>
+      Go to São Paulo
+    </button>
+  );
+}
+
+// With full options
+function NavigationButtonAnimated() {
+  const { flyTo } = useMap();
+
+  return (
+    <button onClick={() => flyTo({ center: [-46.63, -23.55], zoom: 14, duration: 600 })}>
+      Fly (slow)
+    </button>
+  );
+}
+
+// Projection utilities
 function CustomOverlay() {
   const { center, zoom, project } = useMap();
   const [x, y] = project(center[0], center[1]);
 
-  return <div style={{ position: 'absolute', left: x, top: y }}>Center</div>;
+  return <div style={{ position: 'absolute', left: x, top: y }}>Zoom: {zoom}</div>;
 }`;
 
 const useGeolocationExample = `import { useGeolocation } from '@brownie-js/react/geo';
@@ -362,6 +395,22 @@ function CustomGeolocation() {
     </svg>
   );
 }`;
+
+const circleMarkerEquivalentExample = `import { useMapLayer } from '@brownie-js/react';
+
+// Fixed pixel-size dot — does NOT scale with zoom (Leaflet's CircleMarker equivalent)
+function ApproxLocationDot({ coordinates }: { coordinates: [number, number] }) {
+  const { project, width, height } = useMapLayer();
+  const [x, y] = project(coordinates[0], coordinates[1]);
+
+  return (
+    <svg style={{ position: 'absolute', width, height, pointerEvents: 'none' }}>
+      <circle cx={x} cy={y} r={10} fill="orange" opacity={0.7} />
+    </svg>
+  );
+}
+
+// For a geographic area that DOES scale with zoom, use <Circle radius={meters} /> instead.`;
 
 const useMapLayerExample = `import { useMapLayer } from '@brownie-js/react';
 

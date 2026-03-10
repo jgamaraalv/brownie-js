@@ -40,6 +40,22 @@ GeoMap is the root container. All other components must be rendered as children 
 
 ---
 
+## Coordinate Convention
+
+BrownieJS uses **[longitude, latitude]** order — the GeoJSON standard — for all coordinate props (\`center\`, \`coordinates\`, \`bounds\`). This is the **opposite of Leaflet**, which uses \`[lat, lng]\`.
+
+\`\`\`tsx
+// Leaflet (lat, lng):
+center={[-23.55, -46.63]}
+
+// BrownieJS (lon, lat) — GeoJSON:
+center={[-46.63, -23.55]}
+\`\`\`
+
+Migrating from Leaflet? Flip your coordinates: Leaflet's \`[lat, lng]\` becomes \`[lng, lat]\` in BrownieJS.
+
+---
+
 ## Components
 
 ### GeoMap
@@ -74,10 +90,60 @@ Props:
 - \`minZoom\`: \`number\` — Minimum allowed zoom level
 - \`maxZoom\`: \`number\` — Maximum allowed zoom level
 - \`onZoomChange\`: \`(zoom: number) => void\` — Callback when zoom changes
-- \`onMoveEnd\`: \`(center: [number, number]) => void\` — Callback when map pan ends
+- \`onMoveEnd\`: \`(state: { center, zoom, bounds }) => void\` — Callback when map pan/zoom ends
+- \`onClick\`: \`(event: { latlng: [number, number]; pixel: [number, number]; originalEvent: MouseEvent }) => void\` — Called when the map canvas is clicked (not on a marker). \`latlng\` is \`[longitude, latitude]\`
 - \`className\`: \`string\` — CSS class for the map container
 - \`mapLabel\`: \`string\` — Accessible label for screen readers (recommended)
+- \`isLoading\`: \`boolean\` — When true, renders the loader placeholder instead of the map
+- \`interactiveZoom\`: \`boolean\` — Enables scroll/pinch/double-click zoom. Default: \`true\`
 - \`children\`: \`ReactNode\` — Map layers and overlays
+
+#### Imperative Handle (ref)
+
+GeoMap accepts a \`ref\` that exposes methods for programmatic control:
+
+\`\`\`tsx
+import { useRef } from 'react';
+import { GeoMap, TileLayer, GeoMapHandle } from '@brownie-js/react';
+
+function MapWithControls() {
+  const mapRef = useRef<GeoMapHandle>(null);
+
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <GeoMap ref={mapRef} center={[-46.63, -23.55]} zoom={10} mapLabel="Map">
+        <TileLayer />
+      </GeoMap>
+
+      <button onClick={() => mapRef.current?.flyTo([-43.17, -22.91], 12)}>
+        Rio de Janeiro
+      </button>
+
+      <button onClick={() =>
+        mapRef.current?.flyTo({ center: [-46.63, -23.55], zoom: 14, duration: 600 })
+      }>
+        São Paulo (slow)
+      </button>
+
+      <button onClick={() =>
+        mapRef.current?.fitBounds({ sw: [-46.8, -23.7], ne: [-46.4, -23.4] })
+      }>
+        Fit region
+      </button>
+    </div>
+  );
+}
+\`\`\`
+
+Imperative methods:
+- \`flyTo(center: [number, number], zoom?: number): void\` — Animate to position
+- \`flyTo(options: FlyToOptions): void\` — Animate with full options (\`center\`, \`zoom\`, \`duration\`, \`easing\`)
+- \`fitBounds(bounds: { sw: [number, number]; ne: [number, number] }, padding?: number): void\`
+- \`getZoom(): number\`
+- \`getCenter(): [number, number]\`
+- \`getBounds(): { sw: [number, number]; ne: [number, number] }\`
+
+\`flyTo()\` uses RequestAnimationFrame with a default duration of 300ms and easeOutCubic easing. Respects \`prefers-reduced-motion\` — jumps instantly if the user has reduced motion enabled. \`flyTo\` is also available inside any child component via \`useMap().flyTo()\`.
 
 ---
 
@@ -238,7 +304,9 @@ Props:
 
 ### Circle
 
-Renders a circle overlay with a real-world radius.
+Renders a circle overlay with a **real-world radius in meters** — it scales with zoom level. This is equivalent to Leaflet's \`L.circle()\`, **not** \`L.circleMarker()\`.
+
+For a fixed pixel-size circle that doesn't scale with zoom (equivalent to Leaflet's \`CircleMarker\`), use \`useMapLayer\` with a plain SVG \`<circle>\` and a fixed pixel \`r\`.
 
 \`\`\`tsx
 import { GeoMap, TileLayer } from '@brownie-js/react';
@@ -408,20 +476,39 @@ Props:
 
 ### useMap
 
-Access map state from any child component of GeoMap.
+Access map state and programmatic navigation from any child component of GeoMap.
 
 \`\`\`tsx
 import { useMap } from '@brownie-js/react';
 
+// Programmatic navigation (equivalent to Leaflet's useMap().flyTo())
+function NavigationButton() {
+  const { flyTo } = useMap();
+
+  return (
+    <>
+      <button onClick={() => flyTo([-46.63, -23.55], 12)}>Go to São Paulo</button>
+      <button onClick={() => flyTo({ center: [-46.63, -23.55], zoom: 14, duration: 600 })}>
+        Fly slow
+      </button>
+    </>
+  );
+}
+
+// Projection utilities
 function CustomOverlay() {
   const { center, zoom, project } = useMap();
   const [x, y] = project(center[0], center[1]);
 
-  return <div style={{ position: 'absolute', left: x, top: y }}>Center</div>;
+  return <div style={{ position: 'absolute', left: x, top: y }}>Zoom: {zoom}</div>;
 }
 \`\`\`
 
-Returns: \`{ center: [number, number], zoom: number, project: (lng: number, lat: number) => [number, number] }\`
+Returns: \`{ center: [number, number], zoom: number, project, invert, flyTo, width, height }\`
+
+- \`flyTo(center, zoom?)\` or \`flyTo({ center, zoom, duration?, easing? })\` — programmatic animated navigation
+- \`project(lng, lat) => [x, y]\` — geographic to pixel coordinates
+- \`invert(x, y) => [lng, lat]\` — pixel to geographic coordinates
 
 ---
 
@@ -670,7 +757,29 @@ function CustomLayer() {
 \`\`\`
 
 Signature: \`useMapLayer()\`
-Returns: \`{ project: (lng: number, lat: number) => [number, number], width: number, height: number, zoom: number }\`
+Returns: \`{ project: (lng: number, lat: number) => [number, number], invert, width: number, height: number, zoom: number, center: [number, number] }\`
+
+#### CircleMarker equivalent
+
+BrownieJS's \`Circle\` component uses a **geographic radius in meters** — it scales with zoom. For a **fixed pixel-size dot** that stays the same size regardless of zoom (equivalent to Leaflet's \`CircleMarker\`), use \`useMapLayer\` with a plain SVG \`<circle>\` and a fixed pixel \`r\`:
+
+\`\`\`tsx
+import { useMapLayer } from '@brownie-js/react';
+
+// Fixed pixel-size dot — does NOT scale with zoom (Leaflet's CircleMarker equivalent)
+function ApproxLocationDot({ coordinates }: { coordinates: [number, number] }) {
+  const { project, width, height } = useMapLayer();
+  const [x, y] = project(coordinates[0], coordinates[1]);
+
+  return (
+    <svg style={{ position: 'absolute', width, height, pointerEvents: 'none' }}>
+      <circle cx={x} cy={y} r={10} fill="orange" opacity={0.7} />
+    </svg>
+  );
+}
+
+// For a geographic area that DOES scale with zoom, use <Circle radius={meters} /> instead.
+\`\`\`
 
 ---
 

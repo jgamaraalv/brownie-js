@@ -7,7 +7,11 @@
     "installTitle": "Instalação",
     "exampleTitle": "Exemplo Mínimo",
     "description": "BrownieJS utiliza um modelo de componentes composíveis. GeoMap fornece o container do mapa com renderização de tiles. TileLayer, Marker, MarkerCluster, Popup, Circle, Route e Geolocation são compostos como filhos.",
-    "exampleNote": "GeoMap fornece o container do mapa e contexto. TileLayer renderiza tiles OSM. Marker, Route e Geolocation são compostos como filhos."
+    "exampleNote": "GeoMap fornece o container do mapa e contexto. TileLayer renderiza tiles OSM. Marker, Route e Geolocation são compostos como filhos.",
+    "coordTitle": "Convenção de Coordenadas",
+    "coordDescription": "BrownieJS usa a ordem [longitude, latitude] — o padrão GeoJSON — em todas as props de coordenadas (center, coordinates, bounds). Isso é o oposto do Leaflet, que usa [lat, lng].",
+    "coordLeafletMigration": "Migrando do Leaflet? Inverta suas coordenadas: o [lat, lng] do Leaflet vira [lng, lat] no BrownieJS.",
+    "coordExample": "// Leaflet (lat, lng):\ncenter={[-23.55, -46.63]}\n\n// BrownieJS (lon, lat) — GeoJSON:\ncenter={[-46.63, -23.55]}"
   },
   "sidebar": {
     "gettingStarted": "Primeiros Passos",
@@ -28,7 +32,11 @@
   "components": {
     "geomap": {
       "title": "GeoMap",
-      "description": "O componente raiz do mapa. Fornece um mapa baseado em tiles com centro e zoom configuráveis, dimensionamento automático via ResizeObserver, navegação com zoom e pan, e contexto para todos os componentes filhos. Expõe um handle imperativo via ref com flyTo(FlyToOptions) para transições animadas, fitBounds e consultas de viewport.",
+      "description": "O componente raiz do mapa. Fornece um mapa baseado em tiles com centro e zoom configuráveis, dimensionamento automático via ResizeObserver, navegação com zoom e pan, e contexto para todos os componentes filhos. Expõe um handle imperativo via ref com flyTo(), fitBounds(), getZoom(), getCenter() e getBounds().",
+      "imperativeTitle": "Handle Imperativo (ref)",
+      "imperativeDescription": "GeoMap aceita uma ref que expõe métodos para controle programático — útil quando você precisa navegar no mapa de fora da árvore de componentes (ex: botão \"usar minha localização\").",
+      "imperativeSignatures": "flyTo(options: FlyToOptions): void\nflyTo(center: [number, number], zoom?: number): void\nfitBounds(bounds: { sw: [number, number]; ne: [number, number] }, padding?: number): void\ngetZoom(): number\ngetCenter(): [number, number]\ngetBounds(): { sw: [number, number]; ne: [number, number] }",
+      "imperativeFlyToNote": "flyTo() anima até a posição alvo usando RequestAnimationFrame. Aceita duration opcional (padrão 300ms) e função de easing. Respeita prefers-reduced-motion: se o usuário tiver redução de movimento ativada, o mapa pula instantaneamente.",
       "props": {
         "center": "Centro do mapa como [longitude, latitude].",
         "zoom": "Nível de zoom inicial.",
@@ -206,8 +214,8 @@
   "hooks": {
     "useMap": {
       "title": "useMap",
-      "description": "Retorna o contexto do mapa (centro, zoom, funções project/invert). Deve ser usado dentro de GeoMap.",
-      "returns": "MapContextValue com project(), invert(), center, zoom, width, height."
+      "description": "Retorna o contexto do mapa incluindo estado do viewport, funções de projeção e o método flyTo() para navegação programática. Deve ser usado dentro de GeoMap.",
+      "returns": "MapContextValue com project(), invert(), flyTo(), center, zoom, width, height."
     },
     "useGeolocation": {
       "title": "useGeolocation",
@@ -270,7 +278,9 @@
       "title": "useMapLayer",
       "description": "Fornece funções de projeção e dimensões do mapa para construir camadas personalizadas. Um wrapper de conveniência sobre useMap() otimizado para renderização de camadas.",
       "signature": "useMapLayer()",
-      "returns": "'{ project, invert, width, height, zoom, center }'"
+      "returns": "'{ project, invert, width, height, zoom, center }'",
+      "circleMarkerTitle": "Equivalente ao CircleMarker",
+      "circleMarkerNote": "O componente Circle do BrownieJS usa raio geográfico em metros — ele escala com o zoom. Para um ponto de tamanho fixo em pixels que não escala com o zoom (equivalente ao CircleMarker do Leaflet), use useMapLayer com um SVG circle de r fixo em pixels:"
     }
   },
   "theming": {

@@ -2,6 +2,37 @@ import { getTranslations } from "next-intl/server";
 import { CodeBlock } from "./CodeBlock";
 import { PropTable } from "./PropTable";
 
+const imperativeExample = `import { useRef } from 'react';
+import { GeoMap, TileLayer, GeoMapHandle } from '@brownie-js/react';
+
+function MapWithControls() {
+  const mapRef = useRef<GeoMapHandle>(null);
+
+  return (
+    <div style={{ width: '100%', height: 500 }}>
+      <GeoMap ref={mapRef} center={[-46.63, -23.55]} zoom={10} mapLabel="Map">
+        <TileLayer />
+      </GeoMap>
+
+      <button onClick={() => mapRef.current?.flyTo([-43.17, -22.91], 12)}>
+        Rio de Janeiro
+      </button>
+
+      <button onClick={() =>
+        mapRef.current?.flyTo({ center: [-46.63, -23.55], zoom: 14, duration: 600 })
+      }>
+        São Paulo (slow)
+      </button>
+
+      <button onClick={() =>
+        mapRef.current?.fitBounds({ sw: [-46.8, -23.7], ne: [-46.4, -23.4] })
+      }>
+        Fit region
+      </button>
+    </div>
+  );
+}`;
+
 const example = `import { GeoMap, TileLayer, Marker } from '@brownie-js/react';
 
 function InteractiveMap() {
@@ -158,6 +189,24 @@ export async function GeoMapDocs() {
       <div className="mt-6">
         <PropTable props={props} componentId="geomap" />
       </div>
+
+      <h3 className="text-on-surface mt-10 font-display text-xl font-semibold tracking-tight">
+        {t("components.geomap.imperativeTitle")}
+      </h3>
+      <p className="text-on-surface-muted mt-3 leading-relaxed">
+        {t("components.geomap.imperativeDescription")}
+      </p>
+      <div className="mt-4">
+        <CodeBlock code={imperativeExample} lang="tsx" />
+      </div>
+      <div className="bg-surface-container mt-4 rounded-lg p-4">
+        <pre className="text-on-surface-muted text-sm leading-relaxed whitespace-pre-wrap">
+          {t("components.geomap.imperativeSignatures")}
+        </pre>
+      </div>
+      <p className="text-on-surface-muted mt-3 text-sm leading-relaxed">
+        {t("components.geomap.imperativeFlyToNote")}
+      </p>
     </section>
   );
 }

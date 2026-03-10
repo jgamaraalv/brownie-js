@@ -7,7 +7,11 @@
     "installTitle": "Installation",
     "exampleTitle": "Minimal Example",
     "description": "BrownieJS uses a composable component model. GeoMap provides the map container with tile rendering. TileLayer, Marker, MarkerCluster, Popup, Circle, Route, and Geolocation are composed as children.",
-    "exampleNote": "GeoMap provides the map container and context. TileLayer renders OSM tiles. Marker, Route, and Geolocation are composed as children."
+    "exampleNote": "GeoMap provides the map container and context. TileLayer renders OSM tiles. Marker, Route, and Geolocation are composed as children.",
+    "coordTitle": "Coordinate Convention",
+    "coordDescription": "BrownieJS uses [longitude, latitude] order — the GeoJSON standard — for all coordinate props (center, coordinates, bounds). This is the opposite of Leaflet, which uses [lat, lng].",
+    "coordLeafletMigration": "Migrating from Leaflet? Flip your coordinates: Leaflet's [lat, lng] becomes [lng, lat] in BrownieJS.",
+    "coordExample": "// Leaflet (lat, lng):\ncenter={[-23.55, -46.63]}\n\n// BrownieJS (lon, lat) — GeoJSON:\ncenter={[-46.63, -23.55]}"
   },
   "sidebar": {
     "gettingStarted": "Getting Started",
@@ -28,7 +32,11 @@
   "components": {
     "geomap": {
       "title": "GeoMap",
-      "description": "The root map container component. Provides a tile-based map with configurable center and zoom, auto-sizing via ResizeObserver, zoom and pan navigation, and context for all child components. Exposes an imperative handle via ref with flyTo(FlyToOptions) for animated transitions, fitBounds, and viewport queries.",
+      "description": "The root map container component. Provides a tile-based map with configurable center and zoom, auto-sizing via ResizeObserver, zoom and pan navigation, and context for all child components. Exposes an imperative handle via ref with flyTo(), fitBounds(), getZoom(), getCenter(), and getBounds().",
+      "imperativeTitle": "Imperative Handle (ref)",
+      "imperativeDescription": "GeoMap accepts a ref that exposes methods for programmatic control — useful when you need to navigate the map from outside the component tree (e.g. a \"use my location\" button).",
+      "imperativeSignatures": "flyTo(options: FlyToOptions): void\nflyTo(center: [number, number], zoom?: number): void\nfitBounds(bounds: { sw: [number, number]; ne: [number, number] }, padding?: number): void\ngetZoom(): number\ngetCenter(): [number, number]\ngetBounds(): { sw: [number, number]; ne: [number, number] }",
+      "imperativeFlyToNote": "flyTo() animates to the target position using RequestAnimationFrame. Accepts an optional duration (default 300ms) and easing function. Respects prefers-reduced-motion: if the user has reduced motion enabled, the map jumps instantly instead of animating.",
       "props": {
         "center": "Map center as [longitude, latitude].",
         "zoom": "Initial zoom level.",
@@ -206,8 +214,8 @@
   "hooks": {
     "useMap": {
       "title": "useMap",
-      "description": "Returns the map context (center, zoom, project/invert functions). Must be used inside GeoMap.",
-      "returns": "MapContextValue with project(), invert(), center, zoom, width, height."
+      "description": "Returns the map context including viewport state, projection functions, and the flyTo() method for programmatic navigation. Must be used inside GeoMap.",
+      "returns": "MapContextValue with project(), invert(), flyTo(), center, zoom, width, height."
     },
     "useGeolocation": {
       "title": "useGeolocation",
@@ -270,7 +278,9 @@
       "title": "useMapLayer",
       "description": "Provides projection functions and map dimensions for building custom layers. A convenience wrapper around useMap() optimized for layer rendering.",
       "signature": "useMapLayer()",
-      "returns": "'{ project, invert, width, height, zoom, center }'"
+      "returns": "'{ project, invert, width, height, zoom, center }'",
+      "circleMarkerTitle": "CircleMarker equivalent",
+      "circleMarkerNote": "BrownieJS's Circle component uses a geographic radius in meters — it scales with zoom. For a fixed pixel-size dot that stays the same size regardless of zoom (equivalent to Leaflet's CircleMarker), use useMapLayer with a plain SVG circle and a fixed pixel r:"
     }
   },
   "theming": {

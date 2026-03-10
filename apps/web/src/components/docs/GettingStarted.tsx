@@ -44,6 +44,19 @@ export async function GettingStarted() {
       <p className="text-on-surface-muted mt-4 text-sm leading-relaxed">
         {t("gettingStarted.exampleNote")}
       </p>
+
+      <h3 className="text-on-surface mt-8 font-display text-xl font-semibold tracking-tight">
+        {t("gettingStarted.coordTitle")}
+      </h3>
+      <p className="text-on-surface-muted mt-3 leading-relaxed">
+        {t("gettingStarted.coordDescription")}
+      </p>
+      <div className="mt-3">
+        <CodeBlock code={t("gettingStarted.coordExample")} lang="tsx" />
+      </div>
+      <p className="bg-surface-container border-primary mt-4 rounded-lg border-l-4 px-4 py-3 text-sm leading-relaxed">
+        {t("gettingStarted.coordLeafletMigration")}
+      </p>
     </section>
   );
 }
