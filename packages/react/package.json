@@ -1,6 +1,6 @@
 {
   "name": "@brownie-js/react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
@@ -81,6 +81,6 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@brownie-js/core": "workspace:*"
+    "@brownie-js/core": "^1.0.2"
   }
 }
