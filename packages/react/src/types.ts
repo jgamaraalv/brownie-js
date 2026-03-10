@@ -83,6 +83,8 @@ export interface TileLayerProps {
   url?: string;
   opacity?: number;
   zIndex?: number;
+  /** Request high-DPI tiles on retina displays. Default: true (auto-detect) */
+  retina?: boolean;
 }
 
 // ── Marker ───────────────────────────────────────────────────

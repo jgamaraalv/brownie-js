@@ -1,6 +1,6 @@
 {
   "name": "@brownie-js/react",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",

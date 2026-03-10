@@ -7,12 +7,14 @@ import { TileLruCache } from "./tileLruCache";
 import type { TileLayerProps } from "./types";
 
 const CARTO_URL =
-  "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png";
+  "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 const OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const DEFAULT_URL = CARTO_URL;
 
+const IS_RETINA = typeof window !== "undefined" && window.devicePixelRatio >= 2;
+
 function buildFallbackChain(url: string): string[] {
-  const chain = [url, CARTO_URL, OSM_URL];
+  const chain = [url, CARTO_URL.replace("{r}", ""), OSM_URL];
   return chain.filter((u, i) => chain.indexOf(u) === i);
 }
 const TILE_CACHE_CAPACITY = 200;
@@ -46,16 +48,25 @@ export const TileLayer = memo(function TileLayer({
   url = DEFAULT_URL,
   opacity = 1,
   zIndex = 0,
+  retina = IS_RETINA,
 }: TileLayerProps) {
   const { registerTileUrl, unregisterTileUrl } = useMap();
   const { width, height, stateRef } = useMapSubscription();
 
-  const fallbackChain = useMemo(() => buildFallbackChain(url), [url]);
+  const retinaTag = retina ? "@2x" : "";
+  const resolvedUrl = useMemo(
+    () => url.replace("{r}", retinaTag),
+    [url, retinaTag],
+  );
+  const fallbackChain = useMemo(
+    () => buildFallbackChain(resolvedUrl),
+    [resolvedUrl],
+  );
 
   useEffect(() => {
-    registerTileUrl(url);
-    return () => unregisterTileUrl(url);
-  }, [url, registerTileUrl, unregisterTileUrl]);
+    registerTileUrl(resolvedUrl);
+    return () => unregisterTileUrl(resolvedUrl);
+  }, [resolvedUrl, registerTileUrl, unregisterTileUrl]);
 
   // ── LRU tile cache ──────────────────────────────────────────
   const tileCacheRef = useRef(new TileLruCache<boolean>(TILE_CACHE_CAPACITY));
@@ -182,7 +193,7 @@ export const TileLayer = memo(function TileLayer({
           }}
         >
           {retainedRef.current.tiles.map((tile) => {
-            const tileUrl = url
+            const tileUrl = resolvedUrl
               .replace("{z}", String(tile.z))
               .replace("{x}", String(tile.x))
               .replace("{y}", String(tile.y));
@@ -221,7 +232,7 @@ export const TileLayer = memo(function TileLayer({
         }}
       >
         {tiles.map((tile) => {
-          const tileUrl = url
+          const tileUrl = resolvedUrl
             .replace("{z}", String(tile.z))
             .replace("{x}", String(tile.x))
             .replace("{y}", String(tile.y));

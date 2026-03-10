@@ -140,6 +140,7 @@ export function useMapNavigation(options: UseMapNavigationOptions): {
   const pendingPointerId = useRef<number | null>(null);
 
   // Touch pinch state
+  const isPinching = useRef(false);
   const initialTouchDist = useRef(0);
   const initialTouchMid = useRef({ x: 0, y: 0 });
   const initialTouchState = useRef<MapState>({ center: [0, 0], zoom: 1 });
@@ -405,7 +406,6 @@ export function useMapNavigation(options: UseMapNavigationOptions): {
     // ── Pointer drag (pan) ───────────────────────────────────
 
     function handlePointerDown(e: PointerEvent) {
-      if (e.pointerType === "touch") return; // handled by touch events
       // Don't start map pan if the event originated from a draggable marker
       if ((e.target as HTMLElement).closest?.("[data-draggable-marker]")) {
         return;
@@ -424,7 +424,7 @@ export function useMapNavigation(options: UseMapNavigationOptions): {
     }
 
     function handlePointerMove(e: PointerEvent) {
-      if (!isDragging.current) return;
+      if (!isDragging.current || isPinching.current) return;
 
       const dx = e.clientX - lastPointer.current.x;
       const dy = e.clientY - lastPointer.current.y;
@@ -525,6 +525,9 @@ export function useMapNavigation(options: UseMapNavigationOptions): {
 
       if (touches.length === 2) {
         e.preventDefault();
+        // Cancel any ongoing single-finger drag
+        isDragging.current = false;
+        isPinching.current = true;
         if (!interactiveZoom) return;
         cancelAnimation();
         activateWillChange();
@@ -605,6 +608,9 @@ export function useMapNavigation(options: UseMapNavigationOptions): {
     }
 
     function handleTouchEnd(e: TouchEvent) {
+      if (e.touches.length < 2) {
+        isPinching.current = false;
+      }
       if (e.touches.length === 0) {
         fireMoveEnd();
       }

@@ -175,6 +175,9 @@ export const GeoMap = forwardRef<GeoMapHandle, GeoMapProps>(function GeoMap(
         overflow: "hidden",
         width: propWidth ?? "100%",
         height: propHeight ?? "100%",
+        // When no explicit height is set, use aspect-ratio as fallback so the
+        // map always has dimensions even if the parent has no defined height.
+        ...(!propHeight && !style?.height && { aspectRatio: "4 / 3" }),
         touchAction: "none",
         userSelect: "none",
         ...style,
