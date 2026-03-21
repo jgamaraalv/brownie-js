@@ -105,16 +105,21 @@
         "enableHighAccuracy": "Ativar modo de alta precisão.",
         "timeout": "Timeout em milissegundos.",
         "maximumAge": "Idade máxima da posição em cache em milissegundos.",
-        "onError": "Chamado quando ocorre um erro de geolocalização."
+        "onError": "Chamado quando ocorre um erro de geolocalização.",
+        "color": "Cor do ponto.",
+        "size": "Raio do ponto em pixels.",
+        "showAccuracyRing": "Exibir o anel de precisão ao redor do ponto.",
+        "showPulse": "Exibir a animação de pulso no ponto."
       }
     },
     "tilelayer": {
       "title": "TileLayer",
-      "description": "Renderiza uma grade de tiles a partir de um template de URL (ex: OpenStreetMap). Deve ser colocado dentro de GeoMap.",
+      "description": "Renderiza uma grade de tiles a partir de um template de URL. Usa tiles CartoDB Voyager por padrão. Deve ser colocado dentro de GeoMap.",
       "props": {
-        "url": "Template de URL do tile com placeholders '{'x'}', '{'y'}', '{'z'}'.",
+        "url": "Template de URL do tile com placeholders '{'x'}', '{'y'}', '{'z'}'. Suporta '{'r'}' para sufixo retina.",
         "opacity": "Opacidade da camada (0–1).",
-        "zIndex": "CSS z-index para ordenação de camadas."
+        "zIndex": "CSS z-index para ordenação de camadas.",
+        "retina": "Solicitar tiles de alta resolução (@2x) em telas retina. Auto-detectado por padrão."
       }
     },
     "markercluster": {
@@ -185,18 +190,20 @@
       "title": "SVGLayer",
       "description": "Uma camada de overlay SVG personalizada. Fornece uma render prop project() que converte coordenadas geográficas em posições de pixel, permitindo desenhar formas SVG arbitrárias no mapa.",
       "props": {
-        "children": "Função de renderização recebendo '{ project }' para conversão de coordenadas para pixels.",
+        "children": "Função de renderização recebendo a função project diretamente: (project) => ReactNode.",
         "className": "Classe CSS para o container SVG.",
-        "style": "Estilos inline para o container SVG."
+        "zIndex": "CSS z-index para empilhamento de camadas.",
+        "interactive": "Se a camada captura eventos de ponteiro. Padrão: false."
       }
     },
     "htmllayer": {
       "title": "HTMLLayer",
       "description": "Uma camada de overlay HTML personalizada. Fornece uma render prop project() que converte coordenadas geográficas em posições de pixel, permitindo renderizar elementos HTML arbitrários no mapa.",
       "props": {
-        "children": "Função de renderização recebendo '{ project }' para conversão de coordenadas para pixels.",
+        "children": "Função de renderização recebendo a função project diretamente: (project) => ReactNode.",
         "className": "Classe CSS para o container HTML.",
-        "style": "Estilos inline para o container HTML."
+        "zIndex": "CSS z-index para empilhamento de camadas.",
+        "interactive": "Se a camada captura eventos de ponteiro. Padrão: false."
       }
     },
     "loader": {
@@ -294,14 +301,22 @@
     "description": "Controles de mapa prontos para uso importados de @brownie-js/react/controls. Use-os dentro de MapControl para posicioná-los no mapa.",
     "zoomControl": {
       "title": "ZoomControl",
-      "description": "Fornece botões de zoom in (+) e zoom out (-) com acessibilidade por teclado."
+      "description": "Fornece botões de zoom in (+) e zoom out (-) com acessibilidade por teclado.",
+      "props": {
+        "zoomInLabel": "Label acessível para o botão de zoom in.",
+        "zoomOutLabel": "Label acessível para o botão de zoom out.",
+        "className": "Classe CSS para o container do controle de zoom.",
+        "style": "Estilos inline para o container do controle de zoom."
+      }
     },
     "scaleBar": {
       "title": "ScaleBar",
       "description": "Exibe uma barra de escala de distância que atualiza com o nível de zoom atual. Suporta unidades métricas e imperiais.",
       "props": {
         "maxWidth": "Largura máxima da barra de escala em pixels.",
-        "unit": "Sistema de unidades: 'metric' ou 'imperial'."
+        "unit": "Sistema de unidades: 'metric' ou 'imperial'.",
+        "className": "Classe CSS para o container da barra de escala.",
+        "style": "Estilos inline para o container da barra de escala."
       }
     }
   }

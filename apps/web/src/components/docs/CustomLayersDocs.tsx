@@ -44,7 +44,7 @@ export async function SVGLayerDocs() {
   const props = [
     {
       name: "children",
-      type: "(ctx: { project }) => ReactNode",
+      type: "(project: (lon: number, lat: number) => [number, number]) => ReactNode",
       default: "\u2014",
       description: t("components.svglayer.props.children"),
     },
@@ -55,10 +55,16 @@ export async function SVGLayerDocs() {
       description: t("components.svglayer.props.className"),
     },
     {
-      name: "style",
-      type: "CSSProperties",
-      default: "\u2014",
-      description: t("components.svglayer.props.style"),
+      name: "zIndex",
+      type: "number",
+      default: "1",
+      description: t("components.svglayer.props.zIndex"),
+    },
+    {
+      name: "interactive",
+      type: "boolean",
+      default: "false",
+      description: t("components.svglayer.props.interactive"),
     },
   ];
 
@@ -88,7 +94,7 @@ export async function HTMLLayerDocs() {
   const props = [
     {
       name: "children",
-      type: "(ctx: { project }) => ReactNode",
+      type: "(project: (lon: number, lat: number) => [number, number]) => ReactNode",
       default: "\u2014",
       description: t("components.htmllayer.props.children"),
     },
@@ -99,10 +105,16 @@ export async function HTMLLayerDocs() {
       description: t("components.htmllayer.props.className"),
     },
     {
-      name: "style",
-      type: "CSSProperties",
-      default: "\u2014",
-      description: t("components.htmllayer.props.style"),
+      name: "zIndex",
+      type: "number",
+      default: "1",
+      description: t("components.htmllayer.props.zIndex"),
+    },
+    {
+      name: "interactive",
+      type: "boolean",
+      default: "false",
+      description: t("components.htmllayer.props.interactive"),
     },
   ];
 

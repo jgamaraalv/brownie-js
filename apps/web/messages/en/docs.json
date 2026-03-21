@@ -105,16 +105,21 @@
         "enableHighAccuracy": "Enable high accuracy mode.",
         "timeout": "Timeout in milliseconds.",
         "maximumAge": "Maximum age of cached position in milliseconds.",
-        "onError": "Called when a geolocation error occurs."
+        "onError": "Called when a geolocation error occurs.",
+        "color": "Dot color.",
+        "size": "Dot radius in pixels.",
+        "showAccuracyRing": "Show the accuracy ring around the dot.",
+        "showPulse": "Show the pulse animation on the dot."
       }
     },
     "tilelayer": {
       "title": "TileLayer",
-      "description": "Renders a tile grid from a URL template (e.g., OpenStreetMap). Must be placed inside GeoMap.",
+      "description": "Renders a tile grid from a URL template. Defaults to CartoDB Voyager tiles. Must be placed inside GeoMap.",
       "props": {
-        "url": "Tile URL template with '{'x'}', '{'y'}', '{'z'}' placeholders.",
+        "url": "Tile URL template with '{'x'}', '{'y'}', '{'z'}' placeholders. Supports '{'r'}' for retina suffix.",
         "opacity": "Layer opacity (0–1).",
-        "zIndex": "CSS z-index for layer ordering."
+        "zIndex": "CSS z-index for layer ordering.",
+        "retina": "Request high-DPI (@2x) tiles on retina displays. Auto-detected by default."
       }
     },
     "markercluster": {
@@ -185,18 +190,20 @@
       "title": "SVGLayer",
       "description": "A custom SVG overlay layer. Provides a project() render prop that converts geographic coordinates to pixel positions, allowing you to draw arbitrary SVG shapes on the map.",
       "props": {
-        "children": "Render function receiving '{ project }' for coordinate-to-pixel conversion.",
+        "children": "Render function receiving the project function directly: (project) => ReactNode.",
         "className": "CSS class for the SVG container.",
-        "style": "Inline styles for the SVG container."
+        "zIndex": "CSS z-index for layer stacking.",
+        "interactive": "Whether the layer captures pointer events. Default: false."
       }
     },
     "htmllayer": {
       "title": "HTMLLayer",
       "description": "A custom HTML overlay layer. Provides a project() render prop that converts geographic coordinates to pixel positions, allowing you to render arbitrary HTML elements on the map.",
       "props": {
-        "children": "Render function receiving '{ project }' for coordinate-to-pixel conversion.",
+        "children": "Render function receiving the project function directly: (project) => ReactNode.",
         "className": "CSS class for the HTML container.",
-        "style": "Inline styles for the HTML container."
+        "zIndex": "CSS z-index for layer stacking.",
+        "interactive": "Whether the layer captures pointer events. Default: false."
       }
     },
     "loader": {
@@ -294,14 +301,22 @@
     "description": "Ready-to-use map controls imported from @brownie-js/react/controls. Use them inside MapControl to position them on the map.",
     "zoomControl": {
       "title": "ZoomControl",
-      "description": "Provides zoom in (+) and zoom out (-) buttons with keyboard accessibility."
+      "description": "Provides zoom in (+) and zoom out (-) buttons with keyboard accessibility.",
+      "props": {
+        "zoomInLabel": "Accessible label for the zoom-in button.",
+        "zoomOutLabel": "Accessible label for the zoom-out button.",
+        "className": "CSS class for the zoom control container.",
+        "style": "Inline styles for the zoom control container."
+      }
     },
     "scaleBar": {
       "title": "ScaleBar",
       "description": "Displays a distance scale bar that updates with the current zoom level. Supports metric and imperial units.",
       "props": {
         "maxWidth": "Maximum width of the scale bar in pixels.",
-        "unit": "Unit system: 'metric' or 'imperial'."
+        "unit": "Unit system: 'metric' or 'imperial'.",
+        "className": "CSS class for the scale bar container.",
+        "style": "Inline styles for the scale bar container."
       }
     }
   }

@@ -52,6 +52,30 @@ export async function GeolocationDocs() {
       default: "\u2014",
       description: t("components.geolocation.props.onError"),
     },
+    {
+      name: "color",
+      type: "string",
+      default: '"#d4850c"',
+      description: t("components.geolocation.props.color"),
+    },
+    {
+      name: "size",
+      type: "number",
+      default: "6",
+      description: t("components.geolocation.props.size"),
+    },
+    {
+      name: "showAccuracyRing",
+      type: "boolean",
+      default: "true",
+      description: t("components.geolocation.props.showAccuracyRing"),
+    },
+    {
+      name: "showPulse",
+      type: "boolean",
+      default: "true",
+      description: t("components.geolocation.props.showPulse"),
+    },
   ];
 
   return (

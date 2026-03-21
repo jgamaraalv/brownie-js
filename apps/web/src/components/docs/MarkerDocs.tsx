@@ -38,7 +38,7 @@ export async function MarkerDocs() {
     {
       name: "size",
       type: "number",
-      default: "8",
+      default: "32",
       description: t("components.marker.props.size"),
     },
     {
@@ -50,7 +50,7 @@ export async function MarkerDocs() {
     {
       name: "anchor",
       type: '"center" | "bottom"',
-      default: '"center"',
+      default: '"bottom"',
       description: t("components.marker.props.anchor"),
     },
     {

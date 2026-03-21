@@ -87,14 +87,21 @@ function InteractiveMap() {
 Props:
 - \`center\`: \`[number, number]\` — Initial map center as \`[longitude, latitude]\`. Default: \`[0, 0]\`
 - \`zoom\`: \`number\` — Initial zoom level. Default: \`2\`
-- \`minZoom\`: \`number\` — Minimum allowed zoom level
-- \`maxZoom\`: \`number\` — Maximum allowed zoom level
-- \`onZoomChange\`: \`(zoom: number) => void\` — Callback when zoom changes
-- \`onMoveEnd\`: \`(state: { center, zoom, bounds }) => void\` — Callback when map pan/zoom ends
-- \`onClick\`: \`(event: { latlng: [number, number]; pixel: [number, number]; originalEvent: MouseEvent }) => void\` — Called when the map canvas is clicked (not on a marker). \`latlng\` is \`[longitude, latitude]\`
+- \`minZoom\`: \`number\` — Minimum allowed zoom level. Default: \`1\`
+- \`maxZoom\`: \`number\` — Maximum allowed zoom level. Default: \`19\`
+- \`bounds\`: \`{ sw: [number, number]; ne: [number, number] }\` — Initial bounds to fit the map to
+- \`width\`: \`number\` — Fixed width in pixels (auto-sizes via ResizeObserver if omitted)
+- \`height\`: \`number\` — Fixed height in pixels (auto-sizes via ResizeObserver if omitted)
+- \`style\`: \`CSSProperties\` — CSS styles for the map container
 - \`className\`: \`string\` — CSS class for the map container
-- \`mapLabel\`: \`string\` — Accessible label for screen readers (recommended)
+- \`mapLabel\`: \`string\` — Accessible label for screen readers (recommended). Default: \`"Interactive map"\`
+- \`onZoomChange\`: \`(zoom: number) => void\` — Callback when zoom changes
+- \`onMoveEnd\`: \`(state: { center: [number, number]; zoom: number; bounds: { sw: [number, number]; ne: [number, number] } }) => void\` — Callback when map pan/zoom ends
+- \`onClick\`: \`(event: { latlng: [number, number]; pixel: [number, number]; originalEvent: MouseEvent }) => void\` — Called when the map canvas is clicked (not on a marker). \`latlng\` is \`[longitude, latitude]\`
+- \`onError\`: \`(error: Error, info: React.ErrorInfo) => void\` — Called when an error is thrown inside the map. Use to connect error monitoring (Sentry, Datadog, etc.)
+- \`showAttribution\`: \`boolean\` — Show the tile attribution overlay. Default: \`true\`
 - \`isLoading\`: \`boolean\` — When true, renders the loader placeholder instead of the map
+- \`loader\`: \`ReactNode\` — Custom loader element rendered when isLoading is true. Defaults to built-in \`<Loader />\`
 - \`interactiveZoom\`: \`boolean\` — Enables scroll/pinch/double-click zoom. Default: \`true\`
 - \`children\`: \`ReactNode\` — Map layers and overlays
 
@@ -149,25 +156,27 @@ Imperative methods:
 
 ### TileLayer
 
-Renders a tile background. Defaults to OpenStreetMap.
+Renders a tile background. Defaults to CartoDB Voyager tiles. Attribution is auto-detected and rendered by GeoMap (can be disabled via \`showAttribution={false}\`).
 
 \`\`\`tsx
 import { GeoMap, TileLayer } from '@brownie-js/react';
 
-// Default OpenStreetMap
+// Default CartoDB Voyager
 <GeoMap center={[0, 0]} zoom={2} mapLabel="Map">
   <TileLayer />
 </GeoMap>
 
 // Custom tile server
 <GeoMap center={[0, 0]} zoom={2} mapLabel="Map">
-  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+  <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
 </GeoMap>
 \`\`\`
 
 Props:
-- \`url\`: \`string\` — Tile URL template. Supports \`{z}\`, \`{x}\`, \`{y}\`, \`{s}\` placeholders
-- \`attribution\`: \`string\` — Map attribution text
+- \`url\`: \`string\` — Tile URL template. Supports \`{z}\`, \`{x}\`, \`{y}\`, \`{r}\` (retina suffix) placeholders. Default: CartoDB Voyager
+- \`opacity\`: \`number\` — Layer opacity (0–1). Default: \`1\`
+- \`zIndex\`: \`number\` — CSS z-index for layer ordering. Default: \`0\`
+- \`retina\`: \`boolean\` — Request high-DPI (@2x) tiles on retina displays. Default: auto-detected
 
 ---
 
@@ -197,14 +206,18 @@ function MapWithMarkers() {
 Props:
 - \`coordinates\`: \`[number, number]\` — \`[longitude, latitude]\` position. Required
 - \`color\`: \`string\` — Marker color. Default: \`'#d4850c'\`
-- \`size\`: \`number\` — Marker size in pixels. Default: \`8\`
-- \`icon\`: \`ReactNode\` — Custom icon element to render instead of default dot
-- \`anchor\`: \`'center' | 'bottom'\` — Icon anchor point. Default: \`'center'\`
+- \`size\`: \`number\` — Marker size in pixels. Default: \`32\`
+- \`icon\`: \`ReactNode\` — Custom icon element to render instead of default marker pin
+- \`anchor\`: \`'center' | 'bottom'\` — Icon anchor point. Default: \`'bottom'\`
 - \`draggable\`: \`boolean\` — Enable drag interaction. Default: \`false\`
 - \`opacity\`: \`number\` — Marker opacity (0–1)
+- \`animated\`: \`boolean\` — Enable enter animation (fade-in + slide) when the marker mounts. Default: \`false\`
+- \`data\`: \`Record<string, unknown>\` — Arbitrary data passed to click/drag handlers
 - \`children\`: \`ReactNode\` — Rendered inside marker (e.g. Popup, Tooltip)
 - \`onClick\`: \`(event: MouseEvent, data?: Record<string, unknown>) => void\` — Click handler
-- \`onDragEnd\`: \`(coordinates: [number, number]) => void\` — Drag end with new coordinates
+- \`onMouseEnter\`: \`(event: MouseEvent) => void\` — Called when mouse enters marker
+- \`onMouseLeave\`: \`(event: MouseEvent) => void\` — Called when mouse leaves marker
+- \`onDragEnd\`: \`(coordinates: [number, number], data?: Record<string, unknown>) => void\` — Drag end with new coordinates
 - \`ariaLabel\`: \`string\` — Accessible label for screen readers
 
 ---
@@ -231,35 +244,40 @@ function MapWithPopup() {
 \`\`\`
 
 Props:
+- \`coordinates\`: \`[number, number]\` — Geographic position \`[longitude, latitude]\`. Inherited from parent Marker if omitted
 - \`children\`: \`ReactNode\` — Popup content
 - \`offset\`: \`[number, number]\` — Pixel offset from anchor. Default: \`[0, 0]\`
+- \`closeOnClick\`: \`boolean\` — Whether clicking the map closes the popup
 - \`onClose\`: \`() => void\` — Callback when popup closes
+- \`image\`: \`{ src: string; alt: string; height?: number }\` — Optional hero image displayed above popup content
 - \`className\`: \`string\` — CSS class for popup wrapper
+- \`style\`: \`CSSProperties\` — Inline styles for popup wrapper
 
 ---
 
 ### Tooltip
 
-Lightweight hover tooltip.
+Lightweight overlay that displays content at a pixel position. Typically used with mouse events on markers or routes.
 
 \`\`\`tsx
-import { GeoMap, TileLayer, Marker, Tooltip } from '@brownie-js/react';
+import { GeoMap, TileLayer, Tooltip } from '@brownie-js/react';
 
 function MapWithTooltip() {
   return (
     <GeoMap center={[-46.63, -23.55]} zoom={10} mapLabel="Map">
       <TileLayer />
-      <Marker coordinates={[-46.63, -23.55]} ariaLabel="Sao Paulo">
-        <Tooltip>São Paulo</Tooltip>
-      </Marker>
+      <Tooltip x={100} y={200} content="São Paulo" />
     </GeoMap>
   );
 }
 \`\`\`
 
 Props:
-- \`children\`: \`ReactNode\` — Tooltip content
+- \`x\`: \`number\` — Horizontal pixel position. Required
+- \`y\`: \`number\` — Vertical pixel position. Required
+- \`content\`: \`ReactNode\` — Tooltip content. Required
 - \`className\`: \`string\` — CSS class for tooltip wrapper
+- \`style\`: \`CSSProperties\` — Inline styles for tooltip wrapper
 
 ---
 
@@ -298,7 +316,14 @@ Props:
 - \`strokeWidth\`: \`number\` — Line width in pixels. Default: \`2\`
 - \`dashArray\`: \`string\` — SVG dash pattern (e.g. \`'5,10'\`)
 - \`routing\`: \`boolean\` — Enable OSRM turn-by-turn routing. Default: \`false\`
-- \`onRouteLoaded\`: \`(data: { distance: number; duration: number }) => void\` — Called when routing data is ready
+- \`routingUrl\`: \`string\` — Custom OSRM endpoint URL
+- \`animated\`: \`boolean\` — Enable ant trail animation along the route path. Default: \`false\`
+- \`animationSpeed\`: \`number\` — Duration of one animation cycle in seconds. Default: \`2\`
+- \`onClick\`: \`(event: MouseEvent | KeyboardEvent) => void\` — Called when the route path is clicked
+- \`onMouseEnter\`: \`(event: MouseEvent) => void\` — Called when mouse enters the route path
+- \`onMouseLeave\`: \`(event: MouseEvent) => void\` — Called when mouse leaves the route path
+- \`onRouteLoaded\`: \`(data: { distance: number; duration: number; geometry: [number, number][] }) => void\` — Called when routing data is ready
+- \`ariaLabel\`: \`string\` — Accessible label for the route
 
 ---
 
@@ -320,7 +345,7 @@ function MapWithCircle() {
         center={[-46.63, -23.55]}
         radius={5000}
         color="#d4850c"
-        fillOpacity={0.2}
+        opacity={0.2}
       />
     </GeoMap>
   );
@@ -332,8 +357,11 @@ Props:
 - \`radius\`: \`number\` — Radius in meters. Required
 - \`color\`: \`string\` — Stroke color. Default: \`'#d4850c'\`
 - \`fillColor\`: \`string\` — Fill color
-- \`fillOpacity\`: \`number\` — Fill opacity (0–1). Default: \`0.2\`
 - \`strokeWidth\`: \`number\` — Stroke width in pixels. Default: \`2\`
+- \`dashArray\`: \`string\` — SVG stroke-dasharray for dashed borders
+- \`opacity\`: \`number\` — Overall opacity (0–1)
+- \`onClick\`: \`(event: MouseEvent | KeyboardEvent) => void\` — Called when the circle is clicked
+- \`ariaLabel\`: \`string\` — Accessible label for the circle
 
 ---
 
@@ -368,25 +396,59 @@ function ClusteredMap() {
 Props:
 - \`children\`: \`ReactNode\` — Marker components to cluster
 - \`radius\`: \`number\` — Clustering radius in pixels. Default: \`60\`
+- \`maxZoom\`: \`number\` — Zoom level above which markers are not clustered. Default: \`16\`
+- \`renderCluster\`: \`(cluster: ClusterData) => ReactNode\` — Custom render function for cluster markers. ClusterData includes \`{ count, coordinates, items, categories?, dominantCategory? }\`
+- \`onClick\`: \`(cluster: ClusterData) => void\` — Called when a cluster is clicked
+- \`animated\`: \`boolean\` — Enable smooth transition animations when clusters merge or split. Default: \`false\`
+- \`categoryKey\`: \`string\` — Data key used to group markers into categories within clusters
+- \`categoryColors\`: \`Record<string, string>\` — Map of category values to colors for multi-category cluster rendering
 
 ---
 
-### Controls
+### MapControl
 
-Zoom-in and zoom-out control buttons.
+Positions child controls in a corner of the map. Used to wrap ZoomControl, ScaleBar, or any custom content.
 
 \`\`\`tsx
-import { GeoMap, TileLayer, Controls } from '@brownie-js/react';
+import { GeoMap, TileLayer, MapControl } from '@brownie-js/react';
+import { ZoomControl, ScaleBar } from '@brownie-js/react/controls';
 
 <GeoMap center={[0, 0]} zoom={2} mapLabel="Map">
   <TileLayer />
-  <Controls />
+  <MapControl position="top-right">
+    <ZoomControl />
+  </MapControl>
+  <MapControl position="bottom-left">
+    <ScaleBar unit="metric" maxWidth={150} />
+  </MapControl>
 </GeoMap>
 \`\`\`
 
+MapControl Props:
+- \`position\`: \`'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'\` — Corner position. Required
+- \`children\`: \`ReactNode\` — Control content
+- \`className\`: \`string\` — CSS class for the control container
+- \`style\`: \`CSSProperties\` — Inline styles for the control container
+
+### ZoomControl
+
+Zoom in (+) and zoom out (-) buttons with keyboard accessibility. Import from \`@brownie-js/react/controls\`.
+
 Props:
-- \`position\`: \`'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'\` — Controls placement. Default: \`'top-left'\`
-- \`className\`: \`string\` — CSS class for the controls container
+- \`zoomInLabel\`: \`string\` — Accessible label for the zoom-in button. Default: \`"Zoom in"\`
+- \`zoomOutLabel\`: \`string\` — Accessible label for the zoom-out button. Default: \`"Zoom out"\`
+- \`className\`: \`string\` — CSS class for the zoom control container
+- \`style\`: \`CSSProperties\` — Inline styles for the zoom control container
+
+### ScaleBar
+
+Distance scale bar that updates with the current zoom level. Import from \`@brownie-js/react/controls\`.
+
+Props:
+- \`maxWidth\`: \`number\` — Maximum width of the scale bar in pixels. Default: \`100\`
+- \`unit\`: \`'metric' | 'imperial'\` — Unit system. Default: \`'metric'\`
+- \`className\`: \`string\` — CSS class for the scale bar container
+- \`style\`: \`CSSProperties\` — Inline styles for the scale bar container
 
 ---
 
@@ -404,24 +466,25 @@ import { GeoMap, TileLayer, Loader } from '@brownie-js/react';
 \`\`\`
 
 Props:
-- \`className\`: \`string\` — CSS class for the loader element
+- \`ariaLabel\`: \`string\` — Accessible label for the loading region. Default: \`"Loading map"\`
+- \`className\`: \`string\` — CSS class for the loader container
+- \`style\`: \`CSSProperties\` — Inline styles for the loader container
 
 ---
 
 ### HTMLLayer
 
-Custom HTML overlay positioned on the map canvas.
+Custom HTML overlay positioned on the map canvas. Import from \`@brownie-js/react\`.
 
 \`\`\`tsx
-import { GeoMap, TileLayer } from '@brownie-js/react';
-import { HTMLLayer } from '@brownie-js/react/layers';
+import { GeoMap, TileLayer, HTMLLayer } from '@brownie-js/react';
 
 function CustomHTMLOverlay() {
   return (
     <GeoMap center={[-46.63, -23.55]} zoom={10} mapLabel="Map">
       <TileLayer />
       <HTMLLayer>
-        {({ project }) => {
+        {(project) => {
           const [x, y] = project(-46.63, -23.55);
           return (
             <div style={{ position: 'absolute', left: x, top: y, transform: 'translate(-50%, -50%)' }}>
@@ -436,30 +499,28 @@ function CustomHTMLOverlay() {
 \`\`\`
 
 Props:
-- \`children\`: \`(ctx: LayerContext) => ReactNode\` — Render function receiving \`{ project, width, height, zoom }\`
+- \`children\`: \`(project: (lon: number, lat: number) => [number, number]) => ReactNode\` — Render function receiving the project function directly
+- \`className\`: \`string\` — CSS class for the HTML container
+- \`zIndex\`: \`number\` — CSS z-index for layer stacking. Default: \`1\`
+- \`interactive\`: \`boolean\` — Whether the layer captures pointer events. Default: \`false\`
 
 ---
 
 ### SVGLayer
 
-Custom SVG overlay for drawing shapes directly on the map.
+Custom SVG overlay for drawing shapes directly on the map. Import from \`@brownie-js/react\`.
 
 \`\`\`tsx
-import { GeoMap, TileLayer } from '@brownie-js/react';
-import { SVGLayer } from '@brownie-js/react/layers';
+import { GeoMap, TileLayer, SVGLayer } from '@brownie-js/react';
 
 function CustomSVGOverlay() {
   return (
     <GeoMap center={[-46.63, -23.55]} zoom={10} mapLabel="Map">
       <TileLayer />
       <SVGLayer>
-        {({ project, width, height }) => {
+        {(project) => {
           const [x, y] = project(-46.63, -23.55);
-          return (
-            <svg width={width} height={height} style={{ position: 'absolute', pointerEvents: 'none' }}>
-              <circle cx={x} cy={y} r={20} fill="rgba(212, 133, 12, 0.4)" stroke="#d4850c" />
-            </svg>
-          );
+          return <circle cx={x} cy={y} r={20} fill="rgba(212, 133, 12, 0.4)" stroke="#d4850c" />;
         }}
       </SVGLayer>
     </GeoMap>
@@ -468,7 +529,41 @@ function CustomSVGOverlay() {
 \`\`\`
 
 Props:
-- \`children\`: \`(ctx: LayerContext) => ReactNode\` — Render function receiving \`{ project, width, height, zoom }\`
+- \`children\`: \`(project: (lon: number, lat: number) => [number, number]) => ReactNode\` — Render function receiving the project function directly
+- \`className\`: \`string\` — CSS class for the SVG container
+- \`zIndex\`: \`number\` — CSS z-index for layer stacking. Default: \`1\`
+- \`interactive\`: \`boolean\` — Whether the layer captures pointer events. Default: \`false\`
+
+---
+
+### Geolocation
+
+Renders a GPS blue dot with accuracy ring and pulse animation on the map. Import from \`@brownie-js/react/geo\`.
+
+\`\`\`tsx
+import { GeoMap, TileLayer } from '@brownie-js/react';
+import { Geolocation } from '@brownie-js/react/geo';
+
+function LiveLocationMap() {
+  return (
+    <GeoMap center={[-46.63, -23.55]} zoom={12} mapLabel="Live location map">
+      <TileLayer />
+      <Geolocation watch={true} enableHighAccuracy={true} />
+    </GeoMap>
+  );
+}
+\`\`\`
+
+Props:
+- \`watch\`: \`boolean\` — Continuously watch position. Default: \`true\`
+- \`enableHighAccuracy\`: \`boolean\` — Enable high accuracy mode. Default: \`true\`
+- \`timeout\`: \`number\` — Timeout in milliseconds. Default: \`10000\`
+- \`maximumAge\`: \`number\` — Maximum age of cached position in milliseconds. Default: \`0\`
+- \`onError\`: \`(error: GeolocationPositionError) => void\` — Called when a geolocation error occurs
+- \`color\`: \`string\` — Dot color. Default: \`'#d4850c'\`
+- \`size\`: \`number\` — Dot radius in pixels. Default: \`6\`
+- \`showAccuracyRing\`: \`boolean\` — Show the accuracy ring around the dot. Default: \`true\`
+- \`showPulse\`: \`boolean\` — Show the pulse animation on the dot. Default: \`true\`
 
 ---
 
@@ -785,14 +880,25 @@ function ApproxLocationDot({ coordinates }: { coordinates: [number, number] }) {
 
 ## Theming
 
-BrownieJS ships with CSS custom properties for easy theming.
+BrownieJS ships with CSS custom properties (\`--bm-*\`) for easy theming. Set them on a parent element or use \`MapThemeProvider\` from \`@brownie-js/react/theme\`.
 
 \`\`\`css
 :root {
-  --brownie-accent: #d4850c;
-  --brownie-marker-size: 8px;
-  --brownie-popup-bg: #ffffff;
-  --brownie-popup-radius: 6px;
+  --bm-marker-color: #d4850c;
+  --bm-popup-bg: #ffffff;
+  --bm-popup-color: #1a0f0a;
+  --bm-popup-radius: 6px;
+  --bm-popup-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  --bm-tooltip-bg: #1a0f0a;
+  --bm-tooltip-color: #fff;
+  --bm-circle-color: #d4850c;
+  --bm-circle-fill: #d4850c;
+  --bm-route-color: #d4850c;
+  --bm-geolocation-color: #4285F4;
+  --bm-control-bg: #fafaf8;
+  --bm-control-color: #1a0f0a;
+  --bm-control-radius: 8px;
+  --bm-focus-ring: #d4850c;
 }
 \`\`\`
 

@@ -36,6 +36,12 @@ export async function TileLayerDocs() {
       default: "\u2014",
       description: t("components.tilelayer.props.zIndex"),
     },
+    {
+      name: "retina",
+      type: "boolean",
+      default: "true",
+      description: t("components.tilelayer.props.retina"),
+    },
   ];
 
   return (

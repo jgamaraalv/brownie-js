@@ -33,6 +33,33 @@ function MapWithScale() {
 export async function ControlsDocs() {
   const t = await getTranslations("docs");
 
+  const zoomProps = [
+    {
+      name: "zoomInLabel",
+      type: "string",
+      default: '"Zoom in"',
+      description: t("controls.zoomControl.props.zoomInLabel"),
+    },
+    {
+      name: "zoomOutLabel",
+      type: "string",
+      default: '"Zoom out"',
+      description: t("controls.zoomControl.props.zoomOutLabel"),
+    },
+    {
+      name: "className",
+      type: "string",
+      default: "\u2014",
+      description: t("controls.zoomControl.props.className"),
+    },
+    {
+      name: "style",
+      type: "CSSProperties",
+      default: "\u2014",
+      description: t("controls.zoomControl.props.style"),
+    },
+  ];
+
   const scaleProps = [
     {
       name: "maxWidth",
@@ -45,6 +72,18 @@ export async function ControlsDocs() {
       type: "'metric' | 'imperial'",
       default: "'metric'",
       description: t("controls.scaleBar.props.unit"),
+    },
+    {
+      name: "className",
+      type: "string",
+      default: "\u2014",
+      description: t("controls.scaleBar.props.className"),
+    },
+    {
+      name: "style",
+      type: "CSSProperties",
+      default: "\u2014",
+      description: t("controls.scaleBar.props.style"),
     },
   ];
 
@@ -65,6 +104,10 @@ export async function ControlsDocs() {
       </p>
       <div className="mt-4">
         <CodeBlock code={zoomExample} lang="tsx" />
+      </div>
+
+      <div className="mt-6">
+        <PropTable props={zoomProps} componentId="zoomcontrol" />
       </div>
 
       <h3 className="text-on-surface mt-8 font-display text-xl font-semibold tracking-tight">
